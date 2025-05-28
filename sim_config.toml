@@ -1,0 +1,16 @@
+# Kubernetes StatefulSet settings
+name_nodes = 2
+data_nodes = 5
+
+# Network settings
+interface_port = 1780
+hdfs_port = 1738
+
+# Block settings
+block_size = 4096
+block_size_unit = "kb"
+
+# File settings
+file_replication_count = 3
+file_hash_function = "sha256"
+file_checksum_method = "majority"  # Can be either majority or primary
