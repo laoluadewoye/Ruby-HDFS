@@ -2,6 +2,10 @@
 name_nodes = 2
 data_nodes = 5
 
+# Cluster settings
+heartbeat_interval_secs = 5
+heartbeat_timeout_secs = 10
+
 # Network settings
 interface_port = 1780
 hdfs_port = 1738
