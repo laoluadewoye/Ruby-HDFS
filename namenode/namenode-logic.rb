@@ -28,12 +28,22 @@ class HDFSNameNode
 		end
 
 		# Node settings
-		@node_settings = settings
+		@node_settings = create_settings_struct(settings)
 	end
 
 	def create_settings_struct(raw_config)
+		return HDFSConfig.new(
+			raw_config["heartbeat_interval_secs"],
+			raw_config["heartbeat_timeout_secs"],
+			raw_config["interface_port"],
+			raw_config["hdfs_port"],
+			raw_config["block_size"],
+			raw_config["block_size_unit"],
+			raw_config["file_replication_count"],
+			raw_config["file_hash_function"],
+			raw_config["file_checksum_method"]
+		)
 	end
-
 end
 
 # Files should have metadata information and should be saved as json for offline storage
