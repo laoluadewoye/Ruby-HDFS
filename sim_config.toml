@@ -1,4 +1,5 @@
 # Kubernetes StatefulSet settings
+interface_nodes = 2
 name_nodes = 2
 data_nodes = 5
 
