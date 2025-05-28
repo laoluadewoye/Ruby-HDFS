@@ -30,6 +30,10 @@ class HDFSNameNode
 		# Node settings
 		@node_settings = settings
 	end
+
+	def create_settings_struct(raw_config)
+	end
+
 end
 
 # Files should have metadata information and should be saved as json for offline storage
