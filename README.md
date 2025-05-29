@@ -297,6 +297,8 @@ GRPC information
 
 Limits on Storage capacity
 
+Logs
+
 # Resources
 
 https://medium.com/@aelgees/getting-started-with-ruby-grpc-a-comprehensive-guide-with-project-example-41dd940bcd1d 
