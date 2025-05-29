@@ -1,6 +1,23 @@
 # Ruby-HDFS
 A small recreation of Hadoop Distributed File System using Ruby, gRPC, and 
-Kubernetes.
+Kubernetes. This project uses an MIT license, which is in the root project 
+directory.
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Kubernetes Concepts](#kubernetes-concepts)
+  - [Kubernetes Pods](#kubernetes-pods)
+  - [Kubernetes States](#kubernetes-states)
+  - [Kubernetes Deployments and StatefulSpecs](#kubernetes-deployments-and-statefulspecs)
+  - [Kubernetes Services](#kubernetes-services)
+- [The Planned Architecture](#the-planned-architecture)
+  - [RPC Setup](#rpc-setup)
+	- [Interface RPC](#interface-rpc)
+	- [Namenode RPC](#namenode-rpc)
+	- [Datanode RPC](#datanode-rpc)
+  - [Spec Generation for Kubernetes API](#spec-generation-for-kubernetes-api)
+- [Resources](#resources)
 
 # Introduction
 
@@ -288,4 +305,4 @@ https://protobuf.dev/programming-guides/proto3/
 
 https://protobuf.dev/installation/ 
 
-https://grpc.io/docs/guides/auth/ 
+https://grpc.io/docs/guides/auth/
