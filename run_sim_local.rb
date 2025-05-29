@@ -1,7 +1,7 @@
 require './namenode/namenode-server'
 
 # Create a test server
-test_server = HDFSNameNodeServer.new
+test_server = HDFSNameNodeService.new
 
 puts test_server.server_name
 puts test_server.server_ordinal
