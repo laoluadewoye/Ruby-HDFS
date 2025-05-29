@@ -16,6 +16,7 @@ as bullet points rather than in paragraph form.
   basic systems. Common in really basic shell utilities.
 - Ruby and Ruby on Rails
 - Amazon Web Services, specifically Elastic Kubernetes Service (EKS)
+- Zero Trust Architecture
 
 It was like making the Powerpuff Girls. I just needed that chemical X to make
 the whole concoction explode, and that ended up being a desire to do literally
@@ -163,4 +164,128 @@ will make my life easier.
 
 # The Planned Architecture
 
-With all that said, 
+With all that said, the network architecuture for this project will have three 
+main layers.
+
+1) The interface layer will contain the pod used by the user to interact with 
+   the distributed file system.
+2) The name layer will contain pods operating as the Name Nodes of the 
+   distributed file system.
+3) The data layer will contain pods operating as the Data Nodes of the 
+   distributed file system.
+
+For communication, gRPC protocol buffers will be implemented so that every 
+node can know how to communicate with another. Buffers will be designed 
+from a server perspective, meaning a server will only have an rpc service if 
+it is for a need that only that server can provide. You will see what I mean 
+in the following subsections.
+
+Somewhere in the gRPC system, there will be authentication for Zero-Trust 
+compliance.
+
+All inter-layer communication will happen through the use of headless 
+services. When combining a headless service with a statefulset, Kubernetes 
+automatically creates a cluster-local DNS-resolvable address for every pod. 
+This is all that's needed for coordinating the HDFS cluster interally, and a 
+Ingress object can be created to route communication between the user and the 
+interface layer.
+
+As for the storage architecture, it would be persistent volume claims for each 
+Pod, plus a shared file system as a backup. That way, I can have my cake and 
+eat it too. Plus, it gives me one location to see how everything's developing.
+
+At a high level, that is about it. The only other thing is that I will be 
+keeping the CRUD (Create, Retrieve, Update, Delete) paradigm in the back of my 
+head for this project.
+
+## RPC Setup
+
+This section will clarify what calls each layer would handle from a server 
+perspective. Session tokens, encrypted content, and other add ons can be added 
+to make the intercommunication more secure.
+
+### Interface RPC
+
+The interface layer is where the user will send commands for CRUD mechanics of 
+the files, the files' data, and the files' metadata. Below is a list of things 
+that surrounding entities should only send to a given interface pod.
+
+- Namenode Keep-alive messages. There's no point in running an HDFS service if 
+  no one is there to use it. The primary and secondary name node pods will be 
+  able to ping the interface pod to make sure that it's reachable and that the 
+  user still wants to use it. If there is no response or the response is to 
+  shut down, then that is what will happen. This message can carry with it 
+  "busy" metrics so that the interface pod will always know who to ask.
+- User registration messages. Unique accounts will be used to control what 
+  person sees what. This will also allow for dynamic views, dynamic kubernetes 
+  objects, etc.
+- User status messages. Actions that the user does can be sent to the 
+  interface as proof of activity. If some time goes on without any activity, 
+  it is assumed there is no longer a user and the entire system should shut 
+  down, but maintain state unless otherwise specified to reset on turn off.
+
+### Namenode RPC
+
+The name layer is where the the name nodes will coordinate between the 
+interface layer, the data layer, and amongs themselves. Below is a list of 
+things that surrounding entities should only send to a given namenode pod.
+
+- Namenode Keep-alive messages. Name nodes should send periodic keep-alive 
+  messages to the other name nodes. If name nodes do not recieve keep-alive 
+  messages in an expected timeframe, then they should take action to fix the 
+  problem. These messages should contain statuses for added monitoring.
+- Datanode Keep-alive messages. Data nodes should send periodic keep-alive 
+  messages to the other name nodes. If name nodes do not recieve keep-alive 
+  messages in an expected timeframe, then they should take action to fix the 
+  problem. These messages should contain statuses for added monitoring.
+- Interface Create File messages. An interface node can send a request to add 
+  a file to the HDFS.
+- Interface Retrieve File messages. An interface node can send a request to 
+  obtain a file from the HDFS.
+- Interface Update File messages. An interface node can send a request to 
+  update a file from the HDFS. This could be anything from contents to 
+  metadata.
+- Interface Delete File messages. An interface node can send a request to 
+  delete a file from the HDFS.
+- Datanode Block Update messages. Any block modification that is not a 
+  response to something the namenode initiated should be sent to a namenode.
+
+### Datanode RPC
+
+The data layer is where the data pods will communicate with name layer upon 
+requests for CRUD file interactions and status updates. Below is a list of 
+things that the name layer pods should only send to a given datanode pod.
+
+- Namenode Create Block messages. A namenode can send a request to add a block 
+  to a datanode's local storage.
+- Namenode Retrieve Block messages. A namenode can send a request to obtain a 
+  block from a datanode's local storage.
+- Namenode Update Block messages. A namenode can send a request to update a 
+  block in a datanode's local storage.
+- Namenode Delete Block messages. A namenode can send a request to delete a 
+  block in a datanode's local storage.
+- Namenode Status messages. A namenode can periodically request the status of 
+  a given datanode while sending their own information as well. This can 
+  enabled datanodes to choose where to send stuff they initiate.
+
+## Spec Generation for Kubernetes API
+
+Secrets
+
+IPv4 Addresses
+
+Configurations
+
+GRPC information
+
+Limits on Storage capacity
+
+# Resources
+
+https://medium.com/@aelgees/getting-started-with-ruby-grpc-a-comprehensive-guide-with-project-example-41dd940bcd1d 
+
+https://protobuf.dev/programming-guides/proto3/ 
+
+https://protobuf.dev/installation/ 
+
+https://grpc.io/docs/guides/auth/ 

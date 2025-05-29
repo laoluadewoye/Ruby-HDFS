@@ -1,7 +1,10 @@
+# General settings
+reset_persistent = true  # Whether to reset persistent data on startup
+
 # Kubernetes StatefulSet settings
-interface_node_count = 2
 name_node_count = 2
 data_node_count = 5
+name_data_relationship = "rotate" # Can be rotate or split
 
 # Cluster settings
 heartbeat_interval_secs = 5

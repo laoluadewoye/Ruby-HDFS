@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     bigdecimal (3.1.9)
+    citrus (3.0.2)
     google-protobuf (4.31.0-x64-mingw-ucrt)
       bigdecimal
       rake (>= 13)
@@ -11,7 +12,11 @@ GEM
       google-protobuf (>= 3.25, < 5.0)
       googleapis-common-protos-types (~> 1.0)
     grpc-tools (1.72.0)
+    racc (1.8.1)
     rake (13.2.1)
+    toml-rb (4.0.0)
+      citrus (~> 3.0, > 3.0)
+      racc (~> 1.7)
 
 PLATFORMS
   x64-mingw-ucrt
@@ -19,6 +24,7 @@ PLATFORMS
 DEPENDENCIES
   grpc (~> 1.72)
   grpc-tools (~> 1.72)
+  toml-rb (~> 4.0)
 
 RUBY VERSION
    ruby 3.2.2p53
