@@ -19,5 +19,8 @@ class HDFSNameNodeServer
 		@server_name_node = HDFSNameNode.new(
 			@server_name, @server_ordinal, config
 		)
+
+    # Create a TCP server
+    @server_
 	end
 end

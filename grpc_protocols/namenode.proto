@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package namenode;
+
+// NameNode service definition
+service NameNodeService {
+  // 1. Ingest file data from an interface node
+  rpc IngestFile(IngestFileRequest) returns (IngestFileResponse);
+
+  // 2. Retrieve file on behalf of interface node
+  rpc RetrieveFile(RetrieveFileRequest) returns (RetrieveFileResponse);
+}
+
+// Message structure for metadata
+message Metadata {
+	string author = 1;
+	int64 creation_time = 2;
+	int64 modify_time = 3;
+	string extention = 4;
+	int64 bytesize = 5;
+}
+
+// Message structure for file
+message FileData {
+	string filename = 1;
+	Metadata metainfo = 2;
+	bytes content = 3;
+}
+
+// Request to ingest a file from an interface node
+message IngestFileRequest {
+  FileData file = 1;
+}
+
+// Response to ingest file request
+message IngestFileResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Request to retrieve file from data nodes
+message RetrieveFileRequest {
+	string filename = 1;
+}
+
+// Response to retrieve file request
+message RetrieveFileResponse {
+	bool success = 1;
+	string message = 2;
+	FileData file = 3;
+	string checksum = 4;
+}
