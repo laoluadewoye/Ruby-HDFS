@@ -19,6 +19,15 @@ directory.
   - [Spec Generation for Kubernetes API](#spec-generation-for-kubernetes-api)
 - [Resources](#resources)
 
+# Things needed to run this project
+- Ruby 3.2.2 or later. I would install it using Railsinstaller because getting 
+  Ruby on Rails working is a pain in the butt, especially with sqlite3.
+- gRPC tools like protoc.
+- Cloudflare SSL, or cfssl for working with TLS certificates.
+- Whatever is in the Gemfile. Install using `bundle install`.
+- A Kubernetes cluster, such as Amazon EKS, or a local Kubernetes cluster 
+  such as Minikube or Kind.
+
 # Introduction
 
 The lore behind this is pretty simple. I had just come out of spring classes, 
@@ -308,3 +317,7 @@ https://protobuf.dev/programming-guides/proto3/
 https://protobuf.dev/installation/ 
 
 https://grpc.io/docs/guides/auth/
+
+https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/
+
+https://www.youtube.com/watch?v=DvXkD0f-lhY

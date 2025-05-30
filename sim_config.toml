@@ -1,26 +1,37 @@
-# General settings
-reset_persistent = true  # Whether to reset persistent data on startup
-
 # Kubernetes StatefulSet settings
-name_node_count = 2
-data_node_count = 5
-name_data_relationship = "rotate" # Can be rotate or split
+name_node_count = 2  # Number of NameNodes in the cluster.
+data_node_count = 5  # Number of DataNodes in the cluster.
+name_data_relationship = "rotate"  # How DataNode work is divided among 
+						           # NameNodes. Can be rotate or split.
+
+# General settings
+reset_persistent = true  # Whether to reset persistent data on startup.
+setup_location = "./setup"  # Location for setup files.
 
 # Cluster settings
-heartbeat_interval_secs = 5
-heartbeat_timeout_secs = 10
+heartbeat_interval_secs = 5  # Interval between keep alive messages sent.
+heartbeat_timeout_secs = 10  # Timeout for waiting for heartbeat messages 
+                             # after usual interval passes.
 
 # Network settings
-interface_listen_addr = "0.0.0.0"
-interface_listen_port = 11780
-hdfs_listen_addr = "0.0.0.0"
-hdfs_listen_port = 11738
+interface_listen_addr = "0.0.0.0"  # Listening address for the interface.
+interface_listen_port = 11780  # Listening Port for the interface.
+hdfs_listen_addr = "0.0.0.0"  # Listening address for HDFS.
+hdfs_listen_port = 11738  # Listening Port for HDFS.
+                          # I wanted it to be 1738 for a joke but Windows 
+                          # started yelling at me about "DON'T USE WELL KNOWN 
+						  # PORTS" or something smh.
+
+# Security settings
+enable_tls = true  # Whether to enable TLS for secure communication.
+tls_cert_validity_days = 30  # Validity period for the TLS certificate in 
+                             # days.
 
 # Block settings
-block_size = 4096
-block_size_unit = "kb"
+block_size = 4096  # Size of each block in bytes.
+block_size_unit = "kb"  # Unit for block size, can be "b", "kb", "mb", or "gb".
 
 # File settings
-file_replication_count = 3
-file_hash_function = "sha256"
-file_checksum_method = "majority"  # Can be either majority or primary
+file_replication_count = 3  # Number of replicas for each file.
+file_hash_function = "sha256"  # Hash function used for file integrity.
+file_checksum_method = "majority"  # Can be either majority or primary.

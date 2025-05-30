@@ -10,15 +10,13 @@ class HDFSNameNodeService < Namenode::NameNodeService::Service
   attr_reader :server_config
   attr_reader :server
 
-	def initialize()
+	def initialize(hostname="localhost", ordinal=0)
     # Load identification
-		@server_name = ENV['HOSTNAME'] || 'localhost-0'
+		@server_name = hostname + ordinal.to_s
 		@server_ordinal = @server_name.split('-').last.to_i
 
     # Load configuration
-		@server_config = TomlRB.load_file(
-      "D:/Coding Stuff/Ruby Projects/Hadoop Simulation/sim_config.toml"
-		)
+    @server_config = TomlRB.load_file("./sim_config.toml")
 
 		# Create name node object
 		@server_name_node = HDFSNameNode.new(@server_name, @server_ordinal)
