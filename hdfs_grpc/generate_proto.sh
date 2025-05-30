@@ -40,6 +40,7 @@ for proto_file in "${proto_files[@]}"; do
   	grpc_tools_ruby_protoc --proto_path=$definitions_dir \
 	  --ruby_out=$services_dir \
 	  --grpc_out=$services_dir \
+	  "shared/core_messages.proto" \
 	  $proto_file
   else
 	echo "Service files for $proto_file are up to date."

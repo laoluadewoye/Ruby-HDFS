@@ -1,37 +1,61 @@
 # Kubernetes StatefulSet settings
-name_node_count = 2  # Number of NameNodes in the cluster.
-data_node_count = 5  # Number of DataNodes in the cluster.
-name_data_relationship = "rotate"  # How DataNode work is divided among 
-						           # NameNodes. Can be rotate or split.
+kube.name_node_count = 2  # Number of NameNodes in the cluster.
+kube.data_node_count = 5  # Number of DataNodes in the cluster.
 
 # General settings
-reset_persistent = true  # Whether to reset persistent data on startup.
-setup_location = "./hdfs_setup"  # Location for setup files.
+general.reset_persistent = true  # Whether to reset persistent data on startup.
+general.setup_location = "./hdfs_setup"  # Location for setup files.
 
 # Cluster settings
-heartbeat_interval_secs = 5  # Interval between keep alive messages sent.
-heartbeat_timeout_secs = 10  # Timeout for waiting for heartbeat messages 
-                             # after usual interval passes.
+cluster.heartbeat_interval_secs = 5  # Interval between keep alive messages 
+                                     # sent.
+cluster.heartbeat_timeout_secs = 10  # Timeout for waiting for heartbeat 
+                                     # messages after usual interval passes.
+cluster.name_data_relationship = "rotate"  # How DataNode work is divided among
+						                   # NameNodes. Can be rotate or split.
+cluster.shared_filesystem_size = 1 # Size of shared filesystem in
+								   # [shared_filesystem_size_unit].
+cluster.shared_filesystem_size_unit = "gb"  # Unit of shared filesystem size.
+											# Can be "b", "kb", "mb", or "gb".
+cluster.interface_storage_size = 250  # Size of interface storage drive in
+									  # [interface_storage_size_unit].
+cluster.interface_storage_size_unit = "mb"  # Unit of storage. Can be "b",
+                                            # "kb", "mb", or "gb".
+cluster.namenode_storage_size = 250  # Size of NameNode storage drive in
+									 # [namenode_storage_size_unit].
+cluster.namenode_storage_size_unit = "mb"  # Unit of storage. Can be "b",
+										   # "kb", "mb", or "gb".
+cluster.datanode_storage_size = 250  # Size of DataNode storage drive in
+									 # [datanode_storage_size_unit].
+cluster.datanode_storage_size_unit = "mb"  # Unit of storage. Can be "b",
+										   # "kb", "mb", or "gb".
 
 # Network settings
-interface_listen_addr = "0.0.0.0"  # Listening address for the interface.
-interface_listen_port = 11780  # Listening Port for the interface.
-hdfs_listen_addr = "0.0.0.0"  # Listening address for HDFS.
-hdfs_listen_port = 11738  # Listening Port for HDFS.
-                          # I wanted it to be 1738 for a joke but Windows 
-                          # started yelling at me about "DON'T USE WELL KNOWN 
-						  # PORTS" or something smh.
+network.interface_listen_addr = "0.0.0.0"  # Listening address for the 
+                                           # interface.
+network.interface_listen_port = 11780  # Listening Port for the interface.
+network.hdfs_listen_addr = "0.0.0.0"  # Listening address for HDFS.
+network.hdfs_listen_port = 11738  # Listening Port for HDFS.
+								  # I wanted it to be 1738 for a joke but 
+								  # Windows started yelling at me about "DON'T 
+								  # USE WELL KNOWN PORTS" or something smh.
 
 # Security settings
-enable_tls = true  # Whether to enable TLS for secure communication.
-tls_cert_validity_days = 30  # Validity period for the TLS certificate in 
-                             # days.
+security.enable_tls = true  # Whether to enable TLS for secure communication.
+security.tls_cert_validity_days = 30  # Validity period for the TLS certificate
+                                      # in days.
 
 # Block settings
-block_size = 4096  # Size of each block in bytes.
-block_size_unit = "kb"  # Unit for block size, can be "b", "kb", "mb", or "gb".
+block.block_size = 16  # Size of each block in [block_size_unit].
+block.block_size_unit = "kb"  # Unit for block size, can be "b", "kb", "mb", or
+                              # "gb".
 
 # File settings
-file_replication_count = 3  # Number of replicas for each file.
-file_hash_function = "sha256"  # Hash function used for file integrity.
-file_checksum_method = "majority"  # Can be either majority or primary.
+file.file_replication_count = 3  # Number of replicas for each file.
+file.file_hash_function = "sha256"  # Hash function used for file integrity.
+file.file_checksum_method = "majority"  # Can be either majority or primary.
+file.file_chunk_size = 4  # Size of each file chunk in 
+                          # [file_chunk_size_unit].
+file.file_chunk_size_unit = "kb"  # Unit for chunk size. Can be "b", "kb",
+                                  # "mb", or "gb".
+								  

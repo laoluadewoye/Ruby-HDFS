@@ -1,0 +1,39 @@
+//
+// File: file_transfer.proto
+// Overview: This file defines the FileTransferService and its RPC messages.
+//
+
+syntax = "proto3";
+
+package filetransfer;
+
+import "shared/core_messages.proto";
+
+// FileTransferService defines the RPC services available for all nodes.
+service FileTransferService {
+	// 1. Receive file in chunks
+	rpc ReceiveFileChunks(stream FileChunkData) returns (FileChunkResponse);
+
+	// 2. Send file in chunks 
+	rpc SendFileChunks(FileChunkRequest) returns (stream FileChunkData);
+}
+
+// Message structure for file chunk
+message FileChunkData {
+	SessionInfo session_info = 1;  // Session information for file transfer
+	bytes chunk = 2; // File chunk data in bytes
+}
+
+// Region ReceiveFileChunks
+
+	// Message structure for file chunk response
+	message FileChunkResponse {
+		ResponseInfo response_info = 1; // Response information
+	}
+
+// Region SendFileChunks
+
+	// Message structure for file chunk request
+	message FileChunkRequest {
+		SessionInfo session_info = 1; // Session information for file transfer
+	}

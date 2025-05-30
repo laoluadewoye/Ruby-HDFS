@@ -40,6 +40,7 @@ foreach ($protoFile in $protoFiles) {
         grpc_tools_ruby_protoc --proto_path=$definitionsDir `
             --ruby_out=$servicesDir `
             --grpc_out=$servicesDir `
+			shared/core_messages.proto `
             $protoFile.FullName
     }
     else {

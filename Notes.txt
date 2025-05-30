@@ -4,3 +4,13 @@ grpc
 replication
 intergrity via file hashing
 dynamic scalability
+
+
+Sending file flow CRUD
+
+1) Interface sends Create Request to Name
+	- Create contains file name and other information about the file.
+2) Name reads request and sends back Create Response
+	- Contains Session ID for sending data along with Create Request checksum.
+3) Interface sends stream of File Chunks (SendFileChunk) with both the session id and checksum
+4) Name reassembles the stream at the end

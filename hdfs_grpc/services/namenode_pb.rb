@@ -4,17 +4,25 @@
 
 require 'google/protobuf'
 
+require 'shared/core_messages_pb'
 
-descriptor_data = "\n\x0enamenode.proto\x12\x08namenode\"k\n\x08Metadata\x12\x0e\n\x06\x61uthor\x18\x01 \x01(\t\x12\x15\n\rcreation_time\x18\x02 \x01(\x03\x12\x13\n\x0bmodify_time\x18\x03 \x01(\x03\x12\x11\n\textention\x18\x04 \x01(\t\x12\x10\n\x08\x62ytesize\x18\x05 \x01(\x03\"S\n\x08\x46ileData\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\x12$\n\x08metainfo\x18\x02 \x01(\x0b\x32\x12.namenode.Metadata\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\x0c\"5\n\x11IngestFileRequest\x12 \n\x04\x66ile\x18\x01 \x01(\x0b\x32\x12.namenode.FileData\"6\n\x12IngestFileResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"\'\n\x13RetrieveFileRequest\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\"l\n\x14RetrieveFileResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\x12 \n\x04\x66ile\x18\x03 \x01(\x0b\x32\x12.namenode.FileData\x12\x10\n\x08\x63hecksum\x18\x04 \x01(\t2\xa9\x01\n\x0fNameNodeService\x12G\n\nIngestFile\x12\x1b.namenode.IngestFileRequest\x1a\x1c.namenode.IngestFileResponse\x12M\n\x0cRetrieveFile\x12\x1d.namenode.RetrieveFileRequest\x1a\x1e.namenode.RetrieveFileResponseb\x06proto3"
+
+descriptor_data = "\n\x0enamenode.proto\x12\x08namenode\x1a\x1ashared/core_messages.proto\"G\n\x0cNameNodePing\x12\x0f\n\x07node_id\x18\x01 \x01(\r\x12&\n\x0enode_telemetry\x18\x02 \x01(\x0b\x32\x0e.NodeTelemetry\"d\n\x14NameNodePingResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12&\n\x0enode_telemetry\x18\x02 \x01(\x0b\x32\x0e.NodeTelemetry\"^\n\x0c\x44\x61taNodePing\x12\x0f\n\x07node_id\x18\x01 \x01(\r\x12&\n\x0enode_telemetry\x18\x02 \x01(\x0b\x32\x0e.NodeTelemetry\x12\x15\n\runused_blocks\x18\x03 \x01(\r\"d\n\x14\x44\x61taNodePingResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12&\n\x0enode_telemetry\x18\x02 \x01(\x0b\x32\x0e.NodeTelemetry\"5\n\x11\x43reateFileRequest\x12 \n\tfile_info\x18\x01 \x01(\x0b\x32\r.FileInfoData\"^\n\x12\x43reateFileResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12\"\n\x0csession_info\x18\x02 \x01(\x0b\x32\x0c.SessionInfo\"\'\n\x13RetrieveFileRequest\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\"`\n\x14RetrieveFileResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12\"\n\x0csession_info\x18\x02 \x01(\x0b\x32\x0c.SessionInfo\"P\n\x11UpdateFileRequest\x12$\n\rnew_file_info\x18\x01 \x01(\x0b\x32\r.FileInfoData\x12\x15\n\rupdate_blocks\x18\x02 \x01(\x08\"t\n\x12UpdateFileResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12\'\n\x0csession_info\x18\x02 \x01(\x0b\x32\x0c.SessionInfoH\x00\x88\x01\x01\x42\x0f\n\r_session_info\"%\n\x11\x44\x65leteFileRequest\x12\x10\n\x08\x66ilename\x18\x01 \x01(\t\":\n\x12\x44\x65leteFileResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo2\xf1\x03\n\x0fNameNodeService\x12G\n\rNameNodeAlive\x12\x16.namenode.NameNodePing\x1a\x1e.namenode.NameNodePingResponse\x12G\n\rDataNodeAlive\x12\x16.namenode.DataNodePing\x1a\x1e.namenode.DataNodePingResponse\x12P\n\x13InferfaceCreateFile\x12\x1b.namenode.CreateFileRequest\x1a\x1c.namenode.CreateFileResponse\x12V\n\x15InterfaceRetrieveFile\x12\x1d.namenode.RetrieveFileRequest\x1a\x1e.namenode.RetrieveFileResponse\x12P\n\x13InterfaceUpdateFile\x12\x1b.namenode.UpdateFileRequest\x1a\x1c.namenode.UpdateFileResponse\x12P\n\x13InterfaceDeleteFile\x12\x1b.namenode.DeleteFileRequest\x1a\x1c.namenode.DeleteFileResponseb\x06proto3"
 
 pool = Google::Protobuf::DescriptorPool.generated_pool
 pool.add_serialized_file(descriptor_data)
 
 module Namenode
-  Metadata = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.Metadata").msgclass
-  FileData = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.FileData").msgclass
-  IngestFileRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.IngestFileRequest").msgclass
-  IngestFileResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.IngestFileResponse").msgclass
+  NameNodePing = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.NameNodePing").msgclass
+  NameNodePingResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.NameNodePingResponse").msgclass
+  DataNodePing = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.DataNodePing").msgclass
+  DataNodePingResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.DataNodePingResponse").msgclass
+  CreateFileRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.CreateFileRequest").msgclass
+  CreateFileResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.CreateFileResponse").msgclass
   RetrieveFileRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.RetrieveFileRequest").msgclass
   RetrieveFileResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.RetrieveFileResponse").msgclass
+  UpdateFileRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.UpdateFileRequest").msgclass
+  UpdateFileResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.UpdateFileResponse").msgclass
+  DeleteFileRequest = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.DeleteFileRequest").msgclass
+  DeleteFileResponse = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("namenode.DeleteFileResponse").msgclass
 end

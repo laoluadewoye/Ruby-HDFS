@@ -1,0 +1,40 @@
+//
+// File: core_messages.proto
+// Overview: This file defines messages used by multiple proto files.
+//
+
+syntax = "proto3";
+
+// Message structure for basic response information
+message ResponseInfo {
+	bool success = 1; // Indicates if the operation was successful
+	string message = 2; // Message providing additional information
+}
+
+// Message structure for core node telemetry
+message NodeTelemetry {
+	uint64 time_stamp = 1; // Timestamp of telemetry data
+	uint32 active_threads = 2; // Number of active threads
+	uint32 active_conns = 3; // Number of active connections
+}
+
+// Message structure for file metadata
+message MetaData {
+	string author = 1;  // Author of the file
+	uint64 creation_time = 2;  // Creation time in Unix timestamp
+	uint64 modify_time = 3;  // Last modification time in Unix timestamp
+	string extention = 4;  // File extension (e.g., .txt, .jpg)
+	uint64 byte_size = 5;  // Size of the file in bytes
+}
+
+// Messsage structure for file information
+message FileInfoData {
+	string filename = 1;  // Name of the file
+	optional MetaData meta_info = 2;  // Metadata of the file
+}
+
+// Message structure for session information
+message SessionInfo {
+	string session_id = 1;  // Stream session ID for file transfer
+	string checksum = 2;  // Time-dependent checksum for session integrity
+}

@@ -1,52 +1,112 @@
+//
+// File: namenode.proto
+// Overview: This file defines the NameNodeService and its RPC messages.
+//
+
 syntax = "proto3";
 
 package namenode;
 
-// NameNode service definition
+import "shared/core_messages.proto";
+
+// NameNodeService defines the RPC services available for NameNodes
 service NameNodeService {
-  // 1. Ingest file data from an interface node
-  rpc IngestFile(IngestFileRequest) returns (IngestFileResponse);
+	// 1. Receive heartbeat from NameNode
+	rpc NameNodeAlive(NameNodePing) returns (NameNodePingResponse);
 
-  // 2. Retrieve file on behalf of interface node
-  rpc RetrieveFile(RetrieveFileRequest) returns (RetrieveFileResponse);
+	// 2. Receive heartbeat from DataNode
+	rpc DataNodeAlive(DataNodePing) returns (DataNodePingResponse);
+
+	// 3. Receive file and file creation request from InterfaceNode
+	rpc InferfaceCreateFile(CreateFileRequest) returns (CreateFileResponse);
+
+	// 4. Receive file retrieval request from InterfaceNode
+	rpc InterfaceRetrieveFile(RetrieveFileRequest) returns (RetrieveFileResponse);
+
+	// 5. Receive new file information and file update request from InterfaceNode
+	rpc InterfaceUpdateFile(UpdateFileRequest) returns (UpdateFileResponse);
+
+	// 6. Receive file deletion request from InterfaceNode
+	rpc InterfaceDeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
 }
 
-// Message structure for metadata
-message Metadata {
-	string author = 1;
-	int64 creation_time = 2;
-	int64 modify_time = 3;
-	string extention = 4;
-	int64 bytesize = 5;
-}
+// Region NameNodeAlive
 
-// Message structure for file
-message FileData {
-	string filename = 1;
-	Metadata metainfo = 2;
-	bytes content = 3;
-}
+	// Message structure for NameNode ping
+	message NameNodePing {
+		uint32 node_id = 1; // Name of the NameNode
+		NodeTelemetry node_telemetry = 2; // Telemetry data for the NameNode
+	}
 
-// Request to ingest a file from an interface node
-message IngestFileRequest {
-  FileData file = 1;
-}
+	// Message structure for NameNode ping response
+	message NameNodePingResponse {
+		ResponseInfo response_info = 1; // Response information
+		NodeTelemetry node_telemetry = 2; // Telemetry data for the NameNode
+	}
 
-// Response to ingest file request
-message IngestFileResponse {
-  bool success = 1;
-  string message = 2;
-}
+// Region DataNodeAlive
 
-// Request to retrieve file from data nodes
-message RetrieveFileRequest {
-	string filename = 1;
-}
+	// Message structure for DataNode ping
+	message DataNodePing {
+		uint32 node_id = 1; // Name of the DataNode
+		NodeTelemetry node_telemetry = 2; // Telemetry data for the DataNode
+		uint32 unused_blocks = 3; // Number of unused blocks in the DataNode
+	}
 
-// Response to retrieve file request
-message RetrieveFileResponse {
-	bool success = 1;
-	string message = 2;
-	FileData file = 3;
-	string checksum = 4;
-}
+	// Message structure for DataNode ping response
+	message DataNodePingResponse {
+		ResponseInfo response_info = 1; // Response information
+		NodeTelemetry node_telemetry = 2; // Telemetry data for the DataNode
+	}
+
+// Region InterfaceCreateFile
+
+	// Message structure for create file request
+	message CreateFileRequest {
+		FileInfoData file_info = 1;  // File information 
+	}
+
+	// Message structure for create file response
+	message CreateFileResponse {
+		ResponseInfo response_info = 1; // Response information
+		SessionInfo session_info = 2;  // Session information for file transfer
+	}
+
+// Region InterfaceRetrieveFile
+
+	// Message structure for retrieve file request
+	message RetrieveFileRequest {
+		string filename = 1;  // Name of the file
+	}
+
+	// Message structure for retrieve file response
+	message RetrieveFileResponse {
+		ResponseInfo response_info = 1; // Response information
+		SessionInfo session_info = 2;  // Session information for file transfer
+	}
+
+// Region InterfaceUpdateFile
+
+	// Message structure for update file request
+	message UpdateFileRequest {
+		FileInfoData new_file_info = 1;  // File information to be updated
+		bool update_blocks = 2; // Flag to indicate if blocks should be updated
+	}
+
+	// Message structure for update file response
+	message UpdateFileResponse {
+		ResponseInfo response_info = 1; // Response information
+		optional SessionInfo session_info = 2;  // Session information if need
+	}
+
+// Region InterfaceDeleteFile
+
+	// Message structure for delete file request
+	message DeleteFileRequest {
+		string filename = 1;  // Name of the file to be deleted
+	}
+
+	// Message structure for delete file response
+	message DeleteFileResponse {
+		ResponseInfo response_info = 1; // Response information
+	}
