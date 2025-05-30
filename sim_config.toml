@@ -6,7 +6,7 @@ name_data_relationship = "rotate"  # How DataNode work is divided among
 
 # General settings
 reset_persistent = true  # Whether to reset persistent data on startup.
-setup_location = "./setup"  # Location for setup files.
+setup_location = "./hdfs_setup"  # Location for setup files.
 
 # Cluster settings
 heartbeat_interval_secs = 5  # Interval between keep alive messages sent.

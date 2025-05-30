@@ -1,5 +1,4 @@
 require 'toml-rb'
-require 'securerandom'
 require 'openssl'
 require 'fileutils'
 
@@ -7,46 +6,48 @@ def create_key_cert(common_name, validity_days, setup_location)
   puts "Creating TLS key and certificate for #{common_name}..."
 
   # Generate a new RSA private key
-  key = OpenSSL::PKey::RSA.new(2048)
+  key = OpenSSL::PKey::RSA.new 2048
 
   # Create a new certificate
   cert = OpenSSL::X509::Certificate.new
-
-  # Set the version of the certificate
-  cert.version = 3
-
-  # Set the serial number (randomly generated)
-  partial_serial = SecureRandom.random_bytes(16)
-  cert.serial = OpenSSL::BN.new(partial_serial.unpack1('H*'), 16)
-  
-  # Set validity period
+  cert.version = 2
+  cert.serial = OpenSSL::BN.rand(32)
   cert.not_before = Time.now
   cert.not_after = cert.not_before + (validity_days * 24 * 60 * 60)
-
-  # Set subject and issuer (self-signed)
-  name = OpenSSL::X509::Name.parse("/CN=#{common_name}")
-  cert.subject = name
-  cert.issuer = name
-
-  # Set public key
+  cert.subject = OpenSSL::X509::Name.parse "/CN=#{common_name}"
+  cert.issuer = cert.subject
   cert.public_key = key.public_key
 
-  # Add extensions (optional, e.g., for TLS)
+  # Add extensions to the certificate
   extension_factory = OpenSSL::X509::ExtensionFactory.new
   extension_factory.subject_certificate = cert
   extension_factory.issuer_certificate = cert
+  cert.add_extension(
+    extension_factory.create_extension("basicConstraints", "CA:TRUE", true)
+  )
+  cert.add_extension(
+    extension_factory.create_extension(
+      "keyUsage", 
+      "keyEncipherment, digitalSignature, keyCertSign, cRLSign", 
+      true
+    )
+  )
+  cert.add_extension(
+    extension_factory.create_extension("subjectKeyIdentifier", "hash", false)
+  )
+  cert.add_extension(
+    extension_factory.create_extension(
+      "authorityKeyIdentifier", "keyid:always,issuer:always", false
+    )
+  )
 
-  cert.add_extension(extension_factory.create_extension("basicConstraints", "CA:TRUE", true))
-  cert.add_extension(extension_factory.create_extension("subjectKeyIdentifier", "hash"))
-  cert.add_extension(extension_factory.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always"))
-
-  # Sign the certificate with the key
-  cert.sign(key, OpenSSL::Digest::SHA256.new)
+  # Sign the certificate with the private key
+  cert.sign(key, OpenSSL::Digest.new('SHA256'))
 
   # Save the key and cert to files
   file_prefix = setup_location + "/" + common_name
-  File.open("#{file_prefix}-server.key", "w") { |f| f.write(key.to_pem) }
-  File.open("#{file_prefix}-server.crt", "w") { |f| f.write(cert.to_pem) }
+  File.write "#{file_prefix}-server.key", key.private_to_pem
+  File.open("#{file_prefix}-server.crt", "wb") { |f| f.print cert.to_pem }
 end
 
 # Load configuration

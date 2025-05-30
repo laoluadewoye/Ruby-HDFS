@@ -1,7 +1,7 @@
 require 'toml-rb'
 require 'grpc'
 require_relative './namenode_logic'
-require_relative '../grpc/services/namenode_services_pb'
+require_relative '../hdfs_grpc/services/namenode_services_pb'
 
 class HDFSNameNodeService < Namenode::NameNodeService::Service
   attr_reader :server_name 
@@ -28,9 +28,16 @@ class HDFSNameNodeService < Namenode::NameNodeService::Service
     port = @server_config["hdfs_listen_port"]
     socket = ip_addr + ":" + port.to_s
 
+    # Create the credentials
+    key = File.read("./hdfs_setup/tls/datanode-0-server.key")
+    cert = File.read("./hdfs_setup/tls/datanode-0-server.crt")
+    credentials = GRPC::Core::ServerCredentials.new(
+      nil, [{ private_key: key, cert_chain: cert }], true
+    )
+
     # Create the server
     @server = GRPC::RpcServer.new
-    @server.add_http2_port(socket, :this_port_is_insecure)
+    @server.add_http2_port(socket, credentials)
     @server.handle(self)
     @server.run_till_terminated
   end
