@@ -6,10 +6,10 @@ require_relative './hdfs_grpc/services/namenode_services_pb'
 test_node = HDFSNameNode.new
 
 # Print out information
-puts test_node.server_name
-puts test_node.server_ordinal
+puts test_node.namenode_name
+puts test_node.namenode_ordinal
 puts test_node.is_primary
-puts test_node.server_config
+puts test_node.namenode_config
 
 # Start the server
 server_thread = Thread.new { test_node.start_server() }
