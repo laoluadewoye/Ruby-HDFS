@@ -18,7 +18,7 @@ service NameNodeService {
 	rpc DataNodeAlive(DataNodePing) returns (DataNodePingResponse);
 
 	// 3. Receive file creation request from InterfaceNode
-	rpc InferfaceCreateFile(CreateFileRequest) returns (CreateFileResponse);
+	rpc InterfaceCreateFile(CreateFileRequest) returns (CreateFileResponse);
 
 	// 4. Receive file retrieval request from InterfaceNode
 	rpc InterfaceRetrieveFile(RetrieveFileRequest) returns (RetrieveFileResponse);

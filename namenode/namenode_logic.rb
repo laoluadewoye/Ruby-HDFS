@@ -1,20 +1,4 @@
-# HDFS NameNode class
-class HDFSNameNode
-	attr_accessor :node_name, :node_id, :is_primary_namenode
-
-	def initialize(name, id)
-		# Identification
-		@node_name = name
-		@node_id = id
-
-		# Primary namenode status
-		if id == 0
-			@is_primary_namenode = true
-		else
-			@is_primary_namenode = false
-		end
-	end
-end
+# I lied again, this is where the functional stuff will be.
 
 # Files should have metadata information and should be saved as json for offline storage
 # Logs aplenty

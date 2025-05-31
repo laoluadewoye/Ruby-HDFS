@@ -26,7 +26,7 @@ module Namenode
       # 2. Receive heartbeat from DataNode
       rpc :DataNodeAlive, ::Namenode::DataNodePing, ::Namenode::DataNodePingResponse
       # 3. Receive file creation request from InterfaceNode
-      rpc :InferfaceCreateFile, ::Namenode::CreateFileRequest, ::Namenode::CreateFileResponse
+      rpc :InterfaceCreateFile, ::Namenode::CreateFileRequest, ::Namenode::CreateFileResponse
       # 4. Receive file retrieval request from InterfaceNode
       rpc :InterfaceRetrieveFile, ::Namenode::RetrieveFileRequest, ::Namenode::RetrieveFileResponse
       # 5. Receive new file information and file update request from InterfaceNode

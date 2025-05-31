@@ -329,3 +329,5 @@ https://dev.to/sonny_ad/grpc-proto-files-best-practices-2aab
 https://ops.tips/blog/sending-files-via-grpc/
 
 https://www.vinsguru.com/grpc-file-upload-client-streaming/
+
+https://grpc.io/docs/languages/ruby/basics/
