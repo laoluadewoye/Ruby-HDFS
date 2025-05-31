@@ -24,8 +24,8 @@ class HDFSNameNodeService < Namenode::NameNodeService::Service
   
   def start_server()
     # Create socket address
-    ip_addr = @server_config["hdfs_listen_addr"]
-    port = @server_config["hdfs_listen_port"]
+    ip_addr = @server_config["network"]["hdfs_listen_addr"]
+    port = @server_config["network"]["hdfs_listen_port"]
     socket = ip_addr + ":" + port.to_s
 
     # Create the credentials

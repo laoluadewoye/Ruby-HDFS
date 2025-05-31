@@ -1,9 +1,10 @@
 # Get the directory where the script resides
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# Set specific directory variables
+# Set directory-specific variables
 $definitionsDir = Join-Path $scriptDir "definitions"
 $servicesDir = Join-Path $scriptDir "services"
+$replaceScript = Join-Path $scriptDir "replace_require.rb"
 
 # Create the services directory if it doesn't exist
 if (-not (Test-Path -Path $servicesDir)) {
@@ -34,14 +35,25 @@ foreach ($protoFile in $protoFiles) {
         }
     }
 
-    # Generate Ruby gRPC code from the .proto file if needed
+	# Check if existing services are outdated or do not exist
     if ($outdatedServices -or ($matchingServices.Count -eq 0)) {
         Write-Host "Generating new protocol buffers for $($protoFile.Name)..."
+
+		# Generate Ruby gRPC code from the .proto file if needed
         grpc_tools_ruby_protoc --proto_path=$definitionsDir `
             --ruby_out=$servicesDir `
             --grpc_out=$servicesDir `
 			shared/core_messages.proto `
             $protoFile.FullName
+		
+		# Use a ruby script to adjust requirements in buffer files
+		$protoBuffer = $protoBase + "_pb.rb"
+		$protoBufferPath = Join-Path $servicesDir $protoBuffer
+		ruby $replaceScript $protoBufferPath
+
+		$protoServices = $protoBase + "_services_pb.rb"
+		$protoServicesPath = Join-Path $servicesDir $protoServices
+		ruby $replaceScript $protoServicesPath
     }
     else {
         Write-Host "Service files for $($protoFile.Name) are up to date."

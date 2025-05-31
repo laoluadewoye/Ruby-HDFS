@@ -8,7 +8,7 @@
 #
 
 require 'grpc'
-require 'interface_pb'
+require_relative 'interface_pb'
 
 module Interface
   module InterfaceService

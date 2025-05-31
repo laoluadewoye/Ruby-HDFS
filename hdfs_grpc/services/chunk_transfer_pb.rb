@@ -4,7 +4,7 @@
 
 require 'google/protobuf'
 
-require 'shared/core_messages_pb'
+require_relative 'shared/core_messages_pb'
 
 
 descriptor_data = "\n\x14\x63hunk_transfer.proto\x12\rchunktransfer\x1a\x1ashared/core_messages.proto\"L\n\tChunkInfo\x12\x10\n\x08\x63hunk_id\x18\x01 \x01(\r\x12\x16\n\x0e\x63hunk_checksum\x18\x02 \x01(\t\x12\x15\n\ris_last_chunk\x18\x03 \x01(\x08\"q\n\tChunkData\x12\"\n\x0csession_info\x18\x01 \x01(\x0b\x32\x0c.SessionInfo\x12,\n\nchunk_info\x18\x02 \x01(\x0b\x32\x18.chunktransfer.ChunkInfo\x12\x12\n\nchunk_data\x18\x03 \x01(\x0c\"\x89\x01\n\x15ReceiveChunksResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12\x33\n\x11\x63hunk_info_report\x18\x02 \x03(\x0b\x32\x18.chunktransfer.ChunkInfo\x12\x15\n\rchunk_success\x18\x03 \x03(\x08\"7\n\x11SendChunksRequest\x12\"\n\x0csession_info\x18\x01 \x01(\x0b\x32\x0c.SessionInfo2\xb5\x01\n\x14\x43hunkTransferService\x12Q\n\rReceiveChunks\x12\x18.chunktransfer.ChunkData\x1a$.chunktransfer.ReceiveChunksResponse(\x01\x12J\n\nSendChunks\x12 .chunktransfer.SendChunksRequest\x1a\x18.chunktransfer.ChunkData0\x01\x62\x06proto3"

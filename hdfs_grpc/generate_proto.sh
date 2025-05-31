@@ -3,9 +3,10 @@
 # Get the directory where the script resides
 script_dir="$(dirname "${BASH_SOURCE[0]}")"
 
-# Set specific directory variables
+# Set directory-specific variables
 definitions_dir="$script_dir/definitions"
 services_dir="$script_dir/services"
+replace_script="$script_dir/replace_require.rb"
 
 # Create the services directory if it doesn't exist
 mkdir -p "$services_dir"
@@ -34,14 +35,25 @@ for proto_file in "${proto_files[@]}"; do
 	done
   fi
   
-  # Generate Ruby gRPC code from the .proto file if needed
+  # Check if existing services are outdated or do not exist
   if [ $outdated_services == 1 ] || [ ${#matching_services[@]} -eq 0 ]; then
 	echo "Generating new protocol buffers for $proto_file..."
+
+	# Generate Ruby gRPC code from the .proto file if needed
   	grpc_tools_ruby_protoc --proto_path=$definitions_dir \
 	  --ruby_out=$services_dir \
 	  --grpc_out=$services_dir \
 	  "shared/core_messages.proto" \
 	  $proto_file
+	
+	# Use a ruby script to adjust requirements in buffer files
+	buffer_suffix="_pb.rb"
+	proto_buffer_path="$services_dir/$proto_base$buffer_suffix"
+	ruby $replace_script $proto_buffer_path
+
+	services_suffix="_services_pb.rb"
+	proto_services_path="$services_dir/$proto_base$services_suffix"
+	ruby $replace_script $proto_services_path
   else
 	echo "Service files for $proto_file are up to date."
   fi

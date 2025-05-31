@@ -4,7 +4,7 @@
 
 require 'google/protobuf'
 
-require 'shared/core_messages_pb'
+require_relative 'shared/core_messages_pb'
 
 
 descriptor_data = "\n\x0finterface.proto\x12\tinterface\x1a\x1ashared/core_messages.proto\"G\n\x0cNameNodePing\x12\x0f\n\x07node_id\x18\x01 \x01(\r\x12&\n\x0enode_telemetry\x18\x02 \x01(\x0b\x32\x0e.NodeTelemetry\"r\n\x14NameNodePingResponse\x12$\n\rresponse_info\x18\x01 \x01(\x0b\x32\r.ResponseInfo\x12\x34\n\x10interface_status\x18\x02 \x01(\x0e\x32\x1a.interface.InterfaceStatus*T\n\x0fInterfaceStatus\x12\x0f\n\x0bUNSPECIFIED\x10\x00\x12\x0c\n\x08INACTIVE\x10\x01\x12\x0c\n\x08SHUTDOWN\x10\x02\x12\x08\n\x04IDLE\x10\x03\x12\n\n\x06\x41\x43TIVE\x10\x04\x32]\n\x10InterfaceService\x12I\n\rNameNodeAlive\x12\x17.interface.NameNodePing\x1a\x1f.interface.NameNodePingResponseb\x06proto3"

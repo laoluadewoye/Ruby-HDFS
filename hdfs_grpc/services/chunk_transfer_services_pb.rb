@@ -8,7 +8,7 @@
 #
 
 require 'grpc'
-require 'chunk_transfer_pb'
+require_relative 'chunk_transfer_pb'
 
 module Chunktransfer
   module ChunkTransferService

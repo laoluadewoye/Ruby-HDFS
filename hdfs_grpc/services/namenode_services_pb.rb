@@ -8,7 +8,7 @@
 #
 
 require 'grpc'
-require 'namenode_pb'
+require_relative 'namenode_pb'
 
 module Namenode
   module NameNodeService

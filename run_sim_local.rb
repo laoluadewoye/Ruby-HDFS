@@ -16,7 +16,7 @@ puts test_node.is_primary_namenode
 # Start the server
 server_thread = Thread.new { test_server.start_server() }
 
-# Try calling it
+# # Try calling it
 # credentials = GRPC::Core::ChannelCredentials.new(
 #   File.read("./hdfs_setup/tls/datanode-0-server.crt"),
 #   File.read("./hdfs_setup/tls/datanode-1-server.key"),
@@ -24,4 +24,5 @@ server_thread = Thread.new { test_server.start_server() }
 # )
 # client = Namenode::NameNodeService::Stub.new('datanode-0:11738', credentials)
 # response = client.retrieve_file(Namenode::RetrieveFileRequest.new)
-# Thread.kill(server_thread)
+
+Thread.kill(server_thread)

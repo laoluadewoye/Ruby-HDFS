@@ -8,7 +8,7 @@
 #
 
 require 'grpc'
-require 'datanode_pb'
+require_relative 'datanode_pb'
 
 module Datanode
   module DataNodeService
