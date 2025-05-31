@@ -1,0 +1,39 @@
+//
+// File: interface.proto
+// Overview: This file defines the InterfaceService and its RPC messages.
+//
+
+syntax = "proto3";
+
+package interface;
+
+import "shared/core_messages.proto";
+
+// InterfaceService defines the RPC services available for Interface Nodes.
+service InterfaceService {
+	// 1. Receive heartbeat from NameNode
+	rpc NameNodeAlive(NameNodePing) returns (NameNodePingResponse);
+}
+
+// Enum structure for interface statuses
+enum InterfaceStatus {
+	UNSPECIFIED = 0;  // Unspecified (default) status
+	INACTIVE = 1;  // Active status
+	SHUTDOWN = 2;  // Shutdown status
+	IDLE = 3;  // Idle status
+	ACTIVE = 4;  // Inactive status
+}
+
+// Region NameNodeAlive
+
+	// Message structure for NameNode ping
+	message NameNodePing {
+		uint32 node_id = 1;  // Name of the NameNode
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the NameNode
+	}
+
+	// Message structure for NameNode ping response
+	message NameNodePingResponse {
+		ResponseInfo response_info = 1;  // Response information
+		InterfaceStatus interface_status = 2;  // Status of the Interface Node
+	}

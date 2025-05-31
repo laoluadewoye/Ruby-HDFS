@@ -23,13 +23,18 @@ Block level data
 - Block byte Size
 - Block Checksum
 
-File level data
+File level data (Namenode)
 - Filename
 - File byte Size
 - File metadata
 - File checksum
 - Block IDs
 - Block Checksums
+
+File level data (interface)
+- Filename & Folders
+- File size (tailored)
+- File information (metadata)
 
 Checksum Types
 
