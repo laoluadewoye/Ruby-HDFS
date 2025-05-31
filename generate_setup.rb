@@ -2,7 +2,10 @@ require 'toml-rb'
 require 'openssl'
 require 'fileutils'
 
-def create_key_cert(common_name, validity_days, setup_location)
+# Load configuration
+$sim_config = TomlRB.load_file("./sim_config.toml")
+
+def create_key_cert(common_name)
   puts "Creating TLS key and certificate for #{common_name}..."
 
   # Generate a new RSA private key
@@ -12,11 +15,14 @@ def create_key_cert(common_name, validity_days, setup_location)
   cert = OpenSSL::X509::Certificate.new
   cert.version = 2
   cert.serial = OpenSSL::BN.rand(32)
-  cert.not_before = Time.now
-  cert.not_after = cert.not_before + (validity_days * 24 * 60 * 60)
   cert.subject = OpenSSL::X509::Name.parse "/CN=#{common_name}"
   cert.issuer = cert.subject
   cert.public_key = key.public_key
+
+  # Set the validity period of the certificate
+  period = $sim_config["security"]["tls_cert_validity_days"] * 24 * 60 * 60
+  cert.not_before = Time.now
+  cert.not_after = cert.not_before + period
 
   # Add extensions to the certificate
   extension_factory = OpenSSL::X509::ExtensionFactory.new
@@ -45,56 +51,42 @@ def create_key_cert(common_name, validity_days, setup_location)
   cert.sign(key, OpenSSL::Digest.new('SHA256'))
 
   # Save the key and cert to files
+  setup_location = $sim_config["general"]["setup_location"] + "/tls"
   file_prefix = setup_location + "/" + common_name
   File.write "#{file_prefix}-server.key", key.private_to_pem
   File.open("#{file_prefix}-server.crt", "wb") { |f| f.print cert.to_pem }
 end
 
-# Load configuration
-sim_config = TomlRB.load_file("./sim_config.toml")
-
 # Check if reset is enabled
-if sim_config["reset_persistent"]
+if $sim_config["general"]["reset_persistent"]
   puts "Resetting persistent data..."
   # Remove the setup location if it exists
-  if Dir.exist?(sim_config["setup_location"])
-    FileUtils.rm_rf(sim_config["setup_location"])
+  if Dir.exist?($sim_config["general"]["setup_location"])
+    FileUtils.rm_rf($sim_config["general"]["setup_location"])
   end
 end
 
 # Create setup folders if it doesn't exist
-if !Dir.exist?(sim_config["setup_location"])
+if !Dir.exist?($sim_config["general"]["setup_location"])
   puts "Creating folders..."
-  Dir.mkdir(sim_config["setup_location"])  # Main
-  Dir.mkdir(sim_config["setup_location"] + "/tls")  # TLS folder
+  Dir.mkdir($sim_config["general"]["setup_location"])  # Main
+  Dir.mkdir($sim_config["general"]["setup_location"] + "/tls")  # TLS folder
 end
 
 # Create the TLS stuff if needed
-if sim_config["enable_tls"]
+if $sim_config["security"]["enable_tls"]
   # Create keys and certificates for the NameNodes
-  for i in 1..sim_config["name_node_count"] do
-    create_key_cert(
-      "namenode-" + (i-1).to_s,
-      sim_config["tls_cert_validity_days"],
-      sim_config["setup_location"] + "/tls"
-    )
+  for i in 1..$sim_config["kube"]["name_node_count"] do
+    create_key_cert("namenode-" + (i-1).to_s)
   end
 
   # Create keys and certificates for the DataNodes
-  for i in 1..sim_config["data_node_count"] do
-    create_key_cert(
-      "datanode-" + (i-1).to_s,
-      sim_config["tls_cert_validity_days"],
-      sim_config["setup_location"] + "/tls"
-    )
+  for i in 1..$sim_config["kube"]["data_node_count"] do
+    create_key_cert("datanode-" + (i-1).to_s)
   end
 
   # Create key and certificate for the Interface
-  create_key_cert(
-    "interface",
-    sim_config["tls_cert_validity_days"],
-    sim_config["setup_location"] + "/tls"
-  )
+  create_key_cert("interface")
 
   puts "TLS setup completed."
 else
