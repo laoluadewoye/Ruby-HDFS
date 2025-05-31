@@ -1,0 +1,49 @@
+//
+// File: chunk_transfer.proto
+// Overview: This file defines the ChunkTransferService and its RPC messages.
+//
+
+syntax = "proto3";
+
+package chunktransfer;
+
+import "shared/core_messages.proto";
+
+// ChunkTransferService defines the RPC services available for all nodes.
+service ChunkTransferService {
+	// 1. Receive data in chunks
+	rpc ReceiveChunks(stream ChunkData) returns (ReceiveChunksResponse);
+
+	// 2. Send data in chunks
+	rpc SendChunks(SendChunksRequest) returns (stream ChunkData);
+}
+
+// Message structure for chunk information
+message ChunkInfo {
+	uint32 chunk_id = 1;  // Unique identifier for the chunk
+	string chunk_checksum = 2;  // Checksum for chunk integrity
+	bool is_last_chunk = 3;  // Flag indicating if this is the last chunk
+}
+
+// Message structure for chunk data
+message ChunkData {
+	SessionInfo session_info = 1;  // Session information for transmission
+	ChunkInfo chunk_info = 2;  // Information about the chunk
+	bytes chunk_data = 3;  // Chunk data in bytes
+}
+
+// Region ReceiveChunks
+
+	// Message structure for recieve chunk response
+	message ReceiveChunksResponse {
+		ResponseInfo response_info = 1;  // Response information
+		repeated ChunkInfo chunk_info_report = 2;  // List of chunk information
+		repeated bool chunk_success = 3;  // List indicating success per chunk
+	}
+
+// Region SendChunks
+
+	// Message structure for send chunk request
+	message SendChunksRequest {
+		SessionInfo session_info = 1;  // Session information for transmission
+	}

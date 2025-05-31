@@ -14,3 +14,26 @@ Sending file flow CRUD
 	- Contains Session ID for sending data along with Create Request checksum.
 3) Interface sends stream of File Chunks (SendFileChunk) with both the session id and checksum
 4) Name reassembles the stream at the end
+
+
+File data vs Block data
+
+Block level data
+- Block ID
+- Block byte Size
+- Block Checksum
+
+File level data
+- Filename
+- File byte Size
+- File metadata
+- File checksum
+- Block IDs
+- Block Checksums
+
+Checksum Types
+
+- Chunk checksums - Used to verify if chunks were successfully transmitted
+- Block checksums - Used to verify if blocks were successfully transmitted
+- File checksums - Used to verify if files were successfully transmitted
+- Session checksums - Used to verify if the right sessions are used

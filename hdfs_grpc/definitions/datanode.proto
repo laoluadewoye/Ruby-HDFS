@@ -1,0 +1,95 @@
+//
+// File: datanode.proto
+// Overview: This file defines the DataNodeService and its RPC messages.
+//
+
+syntax = "proto3";
+
+package datanode;
+
+import "shared/core_messages.proto";
+
+// DataNodeService defines the RPC services available for DataNodes
+service DataNodeService {
+	// 1. Receive block creation request from NameNode
+	rpc NameNodeCreateBlocks(CreateBlocksRequest) returns (CreateBlocksResponse);
+
+	// 2. Receive block retrieval request from NameNode
+	rpc NameNodeRetrieveBlocks(RetrieveBlocksRequest) returns (RetrieveBlocksResponse);
+
+	// 3. Receive block update request from NameNode
+	rpc NameNodeUpdateBlocks(UpdateBlocksRequest) returns (UpdateBlocksResponse);
+
+	// 4. Receive block deletion request from NameNode
+	rpc NameNodeDeleteBlocks(DeleteBlocksRequest) returns (DeleteBlocksResponse);
+
+	// 5. Recieve status request from NameNode
+	rpc NameNodeStatusRequest(StatusRequest) returns (StatusResponse);
+}
+
+// Region NameNodeCreateBlocks
+
+	// Message structure for block creation request
+	message CreateBlocksRequest {
+		repeated uint32 block_ids = 1;  // List of block IDs
+	}
+
+	// Message structure for block creation response
+	message CreateBlocksResponse {
+		ResponseInfo response_info = 1;  // Response information
+		repeated SessionInfo session_info_list = 2;  // List of create sessions
+	}
+
+// Region NameNodeRetrieveBlocks
+
+	// Message structure for block retrieval request
+	message RetrieveBlocksRequest {
+		repeated uint32 block_ids = 1;  // List of block IDs
+	}
+
+	// Message structure for block retrieval response
+	message RetrieveBlocksResponse {
+		ResponseInfo response_info = 1;  // Response information
+		repeated SessionInfo session_info_list = 2;  // List of retrieve sessions
+	}
+
+// Region NameNodeUpdateBlocks
+
+    // Message structure for block update request
+	message UpdateBlocksRequest {
+		repeated uint32 block_ids = 1;  // List of block IDs
+	}
+
+	// Message structure for block update response
+	message UpdateBlocksResponse {
+		ResponseInfo response_info = 1;  // Response information
+		repeated SessionInfo session_info_list = 2;  // List of update sessions
+	}
+
+// Region NameNodeDeleteBlocks
+
+	// Message structure for block deletion request
+	message DeleteBlocksRequest {
+		repeated uint32 block_ids = 1;  // List of block IDs
+	}
+
+	// Message structure for block deletion response
+	message DeleteBlocksResponse {
+		ResponseInfo response_info = 1;  // Response information
+		repeated bool deletion_status = 2;  // List of deletion success per block
+	}
+
+// Region NameNodeStatusRequest
+
+	// Message structure for status request
+	message StatusRequest {
+		uint32 node_id = 1;  // ID of the NameNode
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the DataNode
+	}
+
+	// Message structure for status response
+	message StatusResponse {
+		ResponseInfo response_info = 1;  // Response information
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the DataNode
+		uint32 unused_blocks = 3;  // Number of unused blocks in the DataNode
+	}

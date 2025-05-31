@@ -17,7 +17,7 @@ service NameNodeService {
 	// 2. Receive heartbeat from DataNode
 	rpc DataNodeAlive(DataNodePing) returns (DataNodePingResponse);
 
-	// 3. Receive file and file creation request from InterfaceNode
+	// 3. Receive file creation request from InterfaceNode
 	rpc InferfaceCreateFile(CreateFileRequest) returns (CreateFileResponse);
 
 	// 4. Receive file retrieval request from InterfaceNode
@@ -30,33 +30,48 @@ service NameNodeService {
 	rpc InterfaceDeleteFile(DeleteFileRequest) returns (DeleteFileResponse);
 }
 
+// Message structure for file metadata
+message MetaData {
+	string author = 1;  // Author of the file
+	uint64 creation_time = 2;  // Creation time in Unix timestamp
+	uint64 modify_time = 3;  // Last modification time in Unix timestamp
+	string extention = 4;  // File extension (e.g., .txt, .jpg)
+	uint64 byte_size = 5;  // Size of the file in bytes
+}
+
+// Messsage structure for file information
+message FileInfoData {
+	string filename = 1;  // Name of the file
+	optional MetaData meta_info = 2;  // Metadata of the file
+}
+
 // Region NameNodeAlive
 
 	// Message structure for NameNode ping
 	message NameNodePing {
-		uint32 node_id = 1; // Name of the NameNode
-		NodeTelemetry node_telemetry = 2; // Telemetry data for the NameNode
+		uint32 node_id = 1;  // Name of the NameNode
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the NameNode
 	}
 
 	// Message structure for NameNode ping response
 	message NameNodePingResponse {
-		ResponseInfo response_info = 1; // Response information
-		NodeTelemetry node_telemetry = 2; // Telemetry data for the NameNode
+		ResponseInfo response_info = 1;  // Response information
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the NameNode
 	}
 
 // Region DataNodeAlive
 
 	// Message structure for DataNode ping
 	message DataNodePing {
-		uint32 node_id = 1; // Name of the DataNode
-		NodeTelemetry node_telemetry = 2; // Telemetry data for the DataNode
-		uint32 unused_blocks = 3; // Number of unused blocks in the DataNode
+		uint32 node_id = 1;  // ID of the DataNode
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the DataNode
+		uint32 unused_blocks = 3;  // Number of unused blocks in the DataNode
 	}
 
 	// Message structure for DataNode ping response
 	message DataNodePingResponse {
-		ResponseInfo response_info = 1; // Response information
-		NodeTelemetry node_telemetry = 2; // Telemetry data for the DataNode
+		ResponseInfo response_info = 1;  // Response information
+		NodeTelemetry node_telemetry = 2;  // Telemetry data for the DataNode
 	}
 
 // Region InterfaceCreateFile
@@ -68,7 +83,7 @@ service NameNodeService {
 
 	// Message structure for create file response
 	message CreateFileResponse {
-		ResponseInfo response_info = 1; // Response information
+		ResponseInfo response_info = 1;  // Response information
 		SessionInfo session_info = 2;  // Session information for file transfer
 	}
 
@@ -81,7 +96,7 @@ service NameNodeService {
 
 	// Message structure for retrieve file response
 	message RetrieveFileResponse {
-		ResponseInfo response_info = 1; // Response information
+		ResponseInfo response_info = 1;  // Response information
 		SessionInfo session_info = 2;  // Session information for file transfer
 	}
 
@@ -90,12 +105,12 @@ service NameNodeService {
 	// Message structure for update file request
 	message UpdateFileRequest {
 		FileInfoData new_file_info = 1;  // File information to be updated
-		bool update_blocks = 2; // Flag to indicate if blocks should be updated
+		bool update_blocks = 2;  // Flag to indicate if blocks should be updated
 	}
 
 	// Message structure for update file response
 	message UpdateFileResponse {
-		ResponseInfo response_info = 1; // Response information
+		ResponseInfo response_info = 1;  // Response information
 		optional SessionInfo session_info = 2;  // Session information if need
 	}
 
@@ -108,5 +123,5 @@ service NameNodeService {
 
 	// Message structure for delete file response
 	message DeleteFileResponse {
-		ResponseInfo response_info = 1; // Response information
+		ResponseInfo response_info = 1;  // Response information
 	}
