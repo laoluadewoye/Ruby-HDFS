@@ -12,8 +12,8 @@ class HDFSNameNode
 
 	def initialize(hostname="localhost", ordinal=0)
     # Load identification
-		@namenode_name = hostname + ordinal.to_s
-		@namenode_ordinal = @namenode_name.split('-').last.to_i
+		@namenode_name = hostname + '-' + ordinal.to_s()
+		@namenode_ordinal = @namenode_name.split('-').last.to_i()
 
     # Primary namenode status
 		if @namenode_ordinal == 0
@@ -35,17 +35,22 @@ class HDFSNameNode
     # Create socket address
     ip_addr = @namenode_config["network"]["hdfs_listen_addr"]
     port = @namenode_config["network"]["hdfs_listen_port"]
-    socket = ip_addr + ":" + port.to_s
+    socket = ip_addr + ":" + port.to_s()
 
     # Create the credentials
-    key = File.read("./hdfs_setup/tls/datanode-0-server.key")
-    cert = File.read("./hdfs_setup/tls/datanode-0-server.crt")
     credentials = GRPC::Core::ServerCredentials.new(
-      nil, [{ private_key: key, cert_chain: cert }], true
+      File.read("./hdfs_setup/tls/simulation-ca-server.crt"), 
+      [
+        { 
+          private_key: File.read("./hdfs_setup/tls/localhost-server.key"), 
+          cert_chain: File.read("./hdfs_setup/tls/localhost-server.crt") 
+        }
+      ], 
+      true
     )
 
     # Create the server
-    new_server = GRPC::RpcServer.new
+    new_server = GRPC::RpcServer.new()
     new_server.add_http2_port(socket, credentials)
     new_server.handle(@core_server)
     new_server.handle(@data_server)
@@ -55,5 +60,36 @@ class HDFSNameNode
 
   def start_server()
     @namenode_server.run_till_terminated()
+  end
+
+  def handle_received_chunk(chunk_data)
+  end
+
+  def create_receive_chunks_response(session_info)
+    return {
+      "response_success" => true,
+      "response_message" => "Test response received successfully",
+      "chunk_info_report" => [
+        {
+          "chunk_id" => 0,
+          "chunk_checksum" => "test-response-checksum-0",
+          "is_last_chunk" => false
+        },
+        {
+          "chunk_id" => 1,
+          "chunk_checksum" => "test-response-checksum-1",
+          "is_last_chunk" => false
+        },
+        {
+          "chunk_id" => 2,
+          "chunk_checksum" => "test-response-checksum-2",
+          "is_last_chunk" => true
+        },
+      ],
+      "chunk_success" => [true, true, true]
+    }
+  end
+
+  def handle_send_chunks_request(send_chunks_request)
   end
 end
