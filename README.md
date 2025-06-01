@@ -331,3 +331,6 @@ https://ops.tips/blog/sending-files-via-grpc/
 https://www.vinsguru.com/grpc-file-upload-client-streaming/
 
 https://grpc.io/docs/languages/ruby/basics/
+
+## Video I made on how to use gRPC with Ruby
+https://www.youtube.com/watch?v=FyBL5TTjgMU

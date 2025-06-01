@@ -18,7 +18,7 @@ server_thread = Thread.new { test_node.start_server() }
 credentials = GRPC::Core::ChannelCredentials.new(
   File.read("./hdfs_setup/tls/simulation-ca-server.crt"),
   File.read("./hdfs_setup/tls/interface-server.key"),
-  File.read("./hdfs_setup/tls/interface-server.crt"),
+  File.read("./hdfs_setup/tls/interface-server.crt")
 )
 server_conn = Chunktransfer::ChunkTransferService::Stub.new("localhost:11738", credentials)
 
