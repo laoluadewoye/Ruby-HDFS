@@ -6,21 +6,19 @@ class NameNodeDataService < Chunktransfer::ChunkTransferService::Service
     @parent = parent
   end
   
-  def receive_chunks(call)
+  def receive_chunks(chunk_data_stream)
     session_info = nil
 
     # Handle stream in parent class
-    call.each_remote_read do |chunk_data|
+    chunk_data_stream.each_remote_read do |chunk_data|
       session_info = chunk_data["session_info"]
       @parent.handle_received_chunk(chunk_data)
     end
 
-    # Create response objects
+    # Create response
     new_response = @parent.create_receive_chunks_response(session_info)
-    new_response_info = ResponseInfo.new(
-      response_success: new_response["response_success"],
-      response_message: new_response["response_message"],
-    )
+
+    # Create chunk info report
     new_chunk_info_report = []
     new_response["chunk_info_report"].each do |chunk_info|
       new_chunk_info_report << Chunktransfer::ChunkInfo.new(
@@ -32,7 +30,10 @@ class NameNodeDataService < Chunktransfer::ChunkTransferService::Service
 
     # Return response
     return Chunktransfer::ReceiveChunksResponse.new(
-      response_info: new_response_info,
+      response_info: ResponseInfo.new(
+        response_success: new_response["response_success"],
+        response_message: new_response["response_message"],
+      ),
       chunk_info_report: new_chunk_info_report,
       chunk_success: new_response["chunk_success"]
     )

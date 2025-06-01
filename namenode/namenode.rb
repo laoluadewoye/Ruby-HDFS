@@ -1,7 +1,8 @@
 require 'grpc'
 require 'toml-rb'
-require_relative 'namenode_core_server'
-require_relative 'namenode_data_server'
+require_relative 'namenode_core_service'
+require_relative 'namenode_data_service'
+require_relative 'namenode_logic'
 
 class HDFSNameNode
   attr_reader :namenode_name 
@@ -62,32 +63,29 @@ class HDFSNameNode
     @namenode_server.run_till_terminated()
   end
 
+  def handle_name_node_ping(name_node_ping)
+  end
+
+  def handle_data_node_ping(data_node_ping)
+  end
+
+  def handle_create_file_request(create_file_request)
+  end
+
+  def handle_retrieve_file_request(retrieve_file_request)
+  end
+
+  def handle_update_file_request(update_file_request)
+  end
+
+  def handle_delete_file_request(delete_file_request)
+  end
+
   def handle_received_chunk(chunk_data)
   end
 
   def create_receive_chunks_response(session_info)
-    # return {
-    #   "response_success" => true,
-    #   "response_message" => "Test response received successfully",
-    #   "chunk_info_report" => [
-    #     {
-    #       "chunk_id" => 0,
-    #       "chunk_checksum" => "test-response-checksum-0",
-    #       "is_last_chunk" => false
-    #     },
-    #     {
-    #       "chunk_id" => 1,
-    #       "chunk_checksum" => "test-response-checksum-1",
-    #       "is_last_chunk" => false
-    #     },
-    #     {
-    #       "chunk_id" => 2,
-    #       "chunk_checksum" => "test-response-checksum-2",
-    #       "is_last_chunk" => true
-    #     },
-    #   ],
-    #   "chunk_success" => [true, true, true]
-    # }
+    return test_receive_chunks_response()
   end
 
   def handle_send_chunks_request(send_chunks_request)
