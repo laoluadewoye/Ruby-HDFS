@@ -1,7 +1,7 @@
 require 'grpc'
 require_relative '../hdfs_grpc/services/namenode_services_pb'
 
-class NameNodeCoreServer < Namenode::NameNodeService::Service
+class NameNodeCoreService < Namenode::NameNodeService::Service
   def initialize(parent)
     @parent = parent
   end

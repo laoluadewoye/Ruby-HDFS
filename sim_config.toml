@@ -16,8 +16,8 @@ cluster.heartbeat_timeout_secs = 10  # Timeout for waiting for heartbeat
                                      # messages after usual interval passes.
 cluster.name_data_relationship = "rotate"  # How DataNode work is divided among
 						                   # NameNodes. Can be rotate or split.
-cluster.shared_filesystem_size = 1 # Size of shared filesystem in
-								   # [shared_filesystem_size_unit].
+cluster.shared_filesystem_size = 1  # Size of shared filesystem in
+								    # [shared_filesystem_size_unit].
 cluster.shared_filesystem_size_unit = "gb"  # Unit of shared filesystem size.
 											# Can be "b", "kb", "mb", or "gb".
 cluster.interface_storage_size = 250  # Size of interface storage drive in

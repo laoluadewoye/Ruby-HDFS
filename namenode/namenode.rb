@@ -25,9 +25,9 @@ class HDFSNameNode
     # Load configuration
     @namenode_config = TomlRB.load_file("./sim_config.toml")
 
-    # Load gRPC servers
-    @core_server = NameNodeCoreServer.new(self)
-    @data_server = NameNodeDataServer.new(self)
+    # Load gRPC services and server
+    @core_service = NameNodeCoreService.new(self)
+    @data_service = NameNodeDataService.new(self)
     @namenode_server = create_server()
 	end
 
@@ -52,8 +52,8 @@ class HDFSNameNode
     # Create the server
     new_server = GRPC::RpcServer.new()
     new_server.add_http2_port(socket, credentials)
-    new_server.handle(@core_server)
-    new_server.handle(@data_server)
+    new_server.handle(@core_service)
+    new_server.handle(@data_service)
 
     return new_server
   end
@@ -66,28 +66,28 @@ class HDFSNameNode
   end
 
   def create_receive_chunks_response(session_info)
-    return {
-      "response_success" => true,
-      "response_message" => "Test response received successfully",
-      "chunk_info_report" => [
-        {
-          "chunk_id" => 0,
-          "chunk_checksum" => "test-response-checksum-0",
-          "is_last_chunk" => false
-        },
-        {
-          "chunk_id" => 1,
-          "chunk_checksum" => "test-response-checksum-1",
-          "is_last_chunk" => false
-        },
-        {
-          "chunk_id" => 2,
-          "chunk_checksum" => "test-response-checksum-2",
-          "is_last_chunk" => true
-        },
-      ],
-      "chunk_success" => [true, true, true]
-    }
+    # return {
+    #   "response_success" => true,
+    #   "response_message" => "Test response received successfully",
+    #   "chunk_info_report" => [
+    #     {
+    #       "chunk_id" => 0,
+    #       "chunk_checksum" => "test-response-checksum-0",
+    #       "is_last_chunk" => false
+    #     },
+    #     {
+    #       "chunk_id" => 1,
+    #       "chunk_checksum" => "test-response-checksum-1",
+    #       "is_last_chunk" => false
+    #     },
+    #     {
+    #       "chunk_id" => 2,
+    #       "chunk_checksum" => "test-response-checksum-2",
+    #       "is_last_chunk" => true
+    #     },
+    #   ],
+    #   "chunk_success" => [true, true, true]
+    # }
   end
 
   def handle_send_chunks_request(send_chunks_request)

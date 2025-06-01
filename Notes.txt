@@ -42,3 +42,20 @@ Checksum Types
 - Block checksums - Used to verify if blocks were successfully transmitted
 - File checksums - Used to verify if files were successfully transmitted
 - Session checksums - Used to verify if the right sessions are used
+
+File transfer from interface to name to data
+
+1) File is sent to interface using http, grpc, or directly
+2) File is broken up into chunks
+3) File is grouped into chunk sets for blocks so that complete reassembly isn't needed
+4) Chunksets are sent to namenodes with block data, and namenodes forward chunksets to datanodes
+
+Interface -> CreateFileRequest -> Namenode
+Namenode uses the bytesize and first divides it by the blocksize to get the amount of blocks necessary
+For each neede block, namenode would send back a list of sessions for the interface to use for sending data chunks.
+Interface will then
+	divide the file directly into chunks,
+	group the chunks into chunksets that would correspond to a session,
+	send each chunkset
+Namenode would recieve a chunkset that would correspond to a session, which will correspond to a specific block
+Namenode would request a block creation from DataNodes using that chunkset

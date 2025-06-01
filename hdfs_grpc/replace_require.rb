@@ -5,9 +5,10 @@ lines = File.readlines(file_path, chomp: true)
 # Alter lines containing "replace"
 altered_lines = lines.map do |line|
   has_require = line.include?("require")
+  has_require_relative = line.include?("require_relative")
   has_google = line.include?("google")
   has_grpc = line.include?("grpc")
-  if has_require && !has_google && !has_grpc
+  if has_require && !has_google && !has_grpc && !has_require_relative
     line.gsub("require", "require_relative")
   else
     line

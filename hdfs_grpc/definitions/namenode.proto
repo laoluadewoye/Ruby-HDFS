@@ -84,7 +84,7 @@ message FileInfoData {
 	// Message structure for create file response
 	message CreateFileResponse {
 		ResponseInfo response_info = 1;  // Response information
-		SessionInfo session_info = 2;  // Session information for file transfer
+		repeated SessionInfo session_info_list = 2;  // Session information for file transfer
 	}
 
 // Region InterfaceRetrieveFile
@@ -111,7 +111,7 @@ message FileInfoData {
 	// Message structure for update file response
 	message UpdateFileResponse {
 		ResponseInfo response_info = 1;  // Response information
-		optional SessionInfo session_info = 2;  // Session information if need
+		repeated SessionInfo session_info = 2;  // Session information if need
 	}
 
 // Region InterfaceDeleteFile
