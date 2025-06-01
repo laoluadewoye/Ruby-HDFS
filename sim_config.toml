@@ -1,3 +1,6 @@
+# Resources
+# https://docs.ruby-lang.org/en/master/OpenSSL/Digest.html
+
 # Kubernetes StatefulSet settings
 kube.name_node_count = 2  # Number of NameNodes in the cluster.
 kube.data_node_count = 5  # Number of DataNodes in the cluster.
@@ -42,8 +45,17 @@ network.hdfs_listen_port = 11738  # Listening Port for HDFS.
 
 # Security settings
 security.enable_tls = true  # Whether to enable TLS for secure communication.
+security.tls_rsa_key_size = 2048  # Size of the RSA key for TLS in bits.
+security.tls_cert_version = 2  # Version of the TLS certificate.
+security.tls_cert_serial_length = 32  # Length of the TLS certificate serial
+									  # number in bytes.
 security.tls_cert_validity_days = 30  # Validity period for the TLS certificate
                                       # in days.
+security.tls_cert_digest_hash = "SHA256"  # Hash function used for the TLS
+									  	  # certificate digest. Use the ruby
+									  	  # OpenSSL::Digest module linked at
+										  # the to find available hash
+										  # functions.
 
 # Block settings
 block.block_size = 16  # Size of each block in [block_size_unit].

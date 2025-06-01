@@ -9,12 +9,14 @@ def create_key_cert(common_name, service_name=nil, ca_cert=nil, ca_key=nil)
   puts "Creating TLS key and certificate for #{common_name}..."
 
   # Generate a new RSA private key
-  key = OpenSSL::PKey::RSA.new(2048)
+  key = OpenSSL::PKey::RSA.new($sim_config["security"]["tls_rsa_key_size"])
 
   # Create a new certificate
   cert = OpenSSL::X509::Certificate.new()
-  cert.version = 2
-  cert.serial = OpenSSL::BN.rand(32)
+  cert.version = $sim_config["security"]["tls_cert_version"]
+  cert.serial = OpenSSL::BN.rand(
+    $sim_config["security"]["tls_cert_serial_length"]
+  )
   cert.public_key = key.public_key
 
   # Set the subject and issuer of the certificate
@@ -65,10 +67,11 @@ def create_key_cert(common_name, service_name=nil, ca_cert=nil, ca_key=nil)
   )
 
   # Sign the certificate with the private key
+  hash = $sim_config["security"]["tls_cert_digest_hash"]
   if ca_key.nil?
-    cert.sign(key, OpenSSL::Digest.new('SHA256'))
+    cert.sign(key, OpenSSL::Digest.new(hash))
   else
-    cert.sign(ca_key, OpenSSL::Digest.new('SHA256'))
+    cert.sign(ca_key, OpenSSL::Digest.new(hash))
   end
 
   # Save the key and cert to files
