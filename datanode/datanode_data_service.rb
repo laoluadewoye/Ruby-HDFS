@@ -1,7 +1,7 @@
 require 'grpc'
 require_relative '../hdfs_grpc/services/chunk_transfer_services_pb'
 
-class InterfaceDataService < Chunktransfer::ChunkTransferService::Service
+class DataNodeDataService < Chunktransfer::ChunkTransferService::Service
   def initialize(parent)
     @parent = parent
   end

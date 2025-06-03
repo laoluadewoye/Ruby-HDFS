@@ -1,8 +1,9 @@
 require 'grpc'
 require_relative './namenode/namenode'
+require_relative './datanode/datanode'
 require_relative './hdfs_grpc/services/chunk_transfer_services_pb'
 
-# Create a test server
+# Create a test namenode server
 test_node = HDFSNameNode.new()
 
 # Print out information
@@ -10,6 +11,14 @@ puts test_node.namenode_name
 puts test_node.namenode_ordinal
 puts test_node.is_primary
 puts test_node.namenode_config
+
+# # Create a test datanode server
+# test_node = HDFSDataNode.new()
+
+# # Print out information
+# puts test_node.datanode_name
+# puts test_node.datanode_ordinal
+# puts test_node.datanode_config
 
 # Start the server
 server_thread = Thread.new { test_node.start_server() }
