@@ -75,7 +75,7 @@ def create_key_cert(common_name, service_name=nil, ca_cert=nil, ca_key=nil)
   end
 
   # Save the key and cert to files
-  setup_location = $sim_config["general"]["setup_location"] + "/tls"
+  setup_location = $sim_config["setup_location"] + "/tls"
   file_prefix = setup_location + "/" + common_name
   File.write("#{file_prefix}-server.key", key.private_to_pem)
   File.write("#{file_prefix}-server.crt", cert.to_pem)
@@ -84,19 +84,19 @@ def create_key_cert(common_name, service_name=nil, ca_cert=nil, ca_key=nil)
 end
 
 # Check if reset is enabled
-if $sim_config["general"]["reset_persistent"]
+if $sim_config["reset_persistent"]
   puts "Resetting persistent data..."
   # Remove the setup location if it exists
-  if Dir.exist?($sim_config["general"]["setup_location"])
-    FileUtils.rm_rf($sim_config["general"]["setup_location"])
+  if Dir.exist?($sim_config["setup_location"])
+    FileUtils.rm_rf($sim_config["setup_location"])
   end
 end
 
 # Create setup folders if it doesn't exist
-if !Dir.exist?($sim_config["general"]["setup_location"])
+if !Dir.exist?($sim_config["setup_location"])
   puts "Creating folders..."
-  Dir.mkdir($sim_config["general"]["setup_location"])  # Main
-  Dir.mkdir($sim_config["general"]["setup_location"] + "/tls")  # TLS folder
+  Dir.mkdir($sim_config["setup_location"])  # Main
+  Dir.mkdir($sim_config["setup_location"] + "/tls")  # TLS folder
 end
 
 # Create the TLS stuff if needed

@@ -1,73 +1,137 @@
 # Resources
 # https://docs.ruby-lang.org/en/master/OpenSSL/Digest.html
 
-# Kubernetes StatefulSet settings
-kube.name_node_count = 2  # Number of NameNodes in the cluster.
-kube.data_node_count = 5  # Number of DataNodes in the cluster.
 
-# General settings
-general.reset_persistent = true  # Whether to reset persistent data on startup.
-general.setup_location = "./hdfs_setup"  # Location for setup files.
+# Whether to reset persistent data on startup.
+reset_persistent = true
+
+# Location for setup files.
+setup_location = "./hdfs_setup"
+
+##############################################################################
+##############################################################################
+
+# Kubernetes StatefulSet settings
+[kube]
+
+# Number of NameNodes in the cluster.
+name_node_count = 2 
+
+# Number of DataNodes in the cluster.
+data_node_count = 5
+
+##############################################################################
+##############################################################################
 
 # Cluster settings
-cluster.heartbeat_interval_secs = 5  # Interval between keep alive messages 
-                                     # sent.
-cluster.heartbeat_timeout_secs = 10  # Timeout for waiting for heartbeat 
-                                     # messages after usual interval passes.
-cluster.name_data_relationship = "rotate"  # How DataNode work is divided among
-						                   # NameNodes. Can be rotate or split.
-cluster.shared_filesystem_size = 1  # Size of shared filesystem in
-								    # [shared_filesystem_size_unit].
-cluster.shared_filesystem_size_unit = "gb"  # Unit of shared filesystem size.
-											# Can be "b", "kb", "mb", or "gb".
-cluster.interface_storage_size = 250  # Size of interface storage drive in
-									  # [interface_storage_size_unit].
-cluster.interface_storage_size_unit = "mb"  # Unit of storage. Can be "b",
-                                            # "kb", "mb", or "gb".
-cluster.namenode_storage_size = 250  # Size of NameNode storage drive in
-									 # [namenode_storage_size_unit].
-cluster.namenode_storage_size_unit = "mb"  # Unit of storage. Can be "b",
-										   # "kb", "mb", or "gb".
-cluster.datanode_storage_size = 250  # Size of DataNode storage drive in
-									 # [datanode_storage_size_unit].
-cluster.datanode_storage_size_unit = "mb"  # Unit of storage. Can be "b",
-										   # "kb", "mb", or "gb".
+[cluster]
+
+# Interval between keep alive messages sent.
+heartbeat_interval_secs = 5
+
+# Timeout for waiting for heartbeat messages after usual interval passes.
+heartbeat_timeout_secs = 10 
+
+# How DataNode work is divided among NameNodes. Can be rotate or split.
+name_data_relationship = "rotate" 
+
+# Size of shared filesystem in [shared_filesystem_size_unit].
+shared_filesystem_size = 1 
+
+# Unit of shared filesystem size. Can be "b", "kb", "mb", or "gb".
+shared_filesystem_size_unit = "gb" 
+
+# Size of interface storage drive in [interface_storage_size_unit].
+interface_storage_size = 250 
+
+# Unit of storage. Can be "b", "kb", "mb", or "gb".
+interface_storage_size_unit = "mb" 
+
+# Size of NameNode storage drive in [namenode_storage_size_unit].
+namenode_storage_size = 250 
+
+# Unit of storage. Can be "b", "kb", "mb", or "gb".
+namenode_storage_size_unit = "mb" 
+
+# Size of DataNode storage drive in [datanode_storage_size_unit].
+datanode_storage_size = 250 
+
+# Unit of storage. Can be "b", "kb", "mb", or "gb".
+datanode_storage_size_unit = "mb"
+
+##############################################################################
+##############################################################################
 
 # Network settings
-network.interface_listen_addr = "0.0.0.0"  # Listening address for the 
-                                           # interface.
-network.interface_listen_port = 11780  # Listening Port for the interface.
-network.hdfs_listen_addr = "0.0.0.0"  # Listening address for HDFS.
-network.hdfs_listen_port = 11738  # Listening Port for HDFS.
-								  # I wanted it to be 1738 for a joke but 
-								  # Windows started yelling at me about "DON'T 
-								  # USE WELL KNOWN PORTS" or something smh.
+[network]
+
+# Listening address for the interface.
+interface_listen_addr = "0.0.0.0" 
+
+# Listening Port for the interface.
+interface_listen_port = 11780 
+
+# Listening address for HDFS.
+hdfs_listen_addr = "0.0.0.0" 
+
+# Listening Port for HDFS. I wanted it to be 1738 for a joke but Windows
+#	started yelling at me about "DON'T USE WELL KNOWN PORTS" or something smh.
+hdfs_listen_port = 11738
+
+##############################################################################
+##############################################################################
 
 # Security settings
-security.enable_tls = true  # Whether to enable TLS for secure communication.
-security.tls_rsa_key_size = 2048  # Size of the RSA key for TLS in bits.
-security.tls_cert_version = 2  # Version of the TLS certificate.
-security.tls_cert_serial_length = 32  # Length of the TLS certificate serial
-									  # number in bytes.
-security.tls_cert_validity_days = 30  # Validity period for the TLS certificate
-                                      # in days.
-security.tls_cert_digest_hash = "SHA256"  # Hash function used for the TLS
-									  	  # certificate digest. Use the ruby
-									  	  # OpenSSL::Digest module linked at
-										  # the to find available hash
-										  # functions.
+[security]
+
+# Whether to enable TLS for secure communication.
+enable_tls = true 
+
+# Size of the RSA key for TLS in bits.
+tls_rsa_key_size = 2048 
+
+# Version of the TLS certificate.
+tls_cert_version = 2 
+
+# Length of the TLS certificate serial number in bytes.
+tls_cert_serial_length = 32 
+
+# Validity period for the TLS certificate in days.
+tls_cert_validity_days = 30 
+
+# Hash function used for the TLS certificate digest. Use the ruby 
+#	OpenSSL::Digest module linked at the to find available hash functions.
+tls_cert_digest_hash = "SHA256"
+
+##############################################################################
+##############################################################################
 
 # Block settings
-block.block_size = 16  # Size of each block in [block_size_unit].
-block.block_size_unit = "kb"  # Unit for block size, can be "b", "kb", "mb", or
-                              # "gb".
+[block]
+
+# Size of each block in [block_size_unit].
+block_size = 16 
+
+# Unit for block size, can be "b", "kb", "mb", or "gb".
+block_size_unit = "kb" 
+
+##############################################################################
+##############################################################################
 
 # File settings
-file.file_replication_count = 3  # Number of replicas for each file.
-file.file_hash_function = "sha256"  # Hash function used for file integrity.
-file.file_checksum_method = "majority"  # Can be either majority or primary.
-file.file_chunk_size = 4  # Size of each file chunk in 
-                          # [file_chunk_size_unit].
-file.file_chunk_size_unit = "kb"  # Unit for chunk size. Can be "b", "kb",
-                                  # "mb", or "gb".
-								  
+[file]
+
+# Number of replicas for each file.
+file_replication_count = 3 
+
+# Hash function used for file integrity.
+file_hash_function = "sha256" 
+
+# Can be either majority or primary.
+file_checksum_method = "majority" 
+
+# Size of each file chunk in [file_chunk_size_unit].
+file_chunk_size = 4 
+
+# Unit for chunk size. Can be "b", "kb", "mb", or "gb".
+file_chunk_size_unit = "kb"

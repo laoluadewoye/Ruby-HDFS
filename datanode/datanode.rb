@@ -5,15 +5,15 @@ require_relative 'datanode_data_service'
 require_relative 'datanode_logic'
 
 class HDFSDataNode
-	attr_reader :datanode_name 
+	attr_reader :datanode_hostname 
   attr_reader :datanode_ordinal
   attr_reader :datanode_config
   attr_reader :datanode_server
 
-  def initialize(hostname="localhost", ordinal=0)
+  def initialize()
     # Load identification
-		@datanode_name = hostname + '-' + ordinal.to_s()
-		@datanode_ordinal = @datanode_name.split('-').last.to_i()
+    @datanode_hostname = ENV['HOSTNAME'] || "localhost-0"
+		@datanode_ordinal = @datanode_hostname.split('-').last.to_i()
 
     # Load configuration
     @datanode_config = TomlRB.load_file("./sim_config.toml")

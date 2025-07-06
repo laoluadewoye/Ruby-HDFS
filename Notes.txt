@@ -59,3 +59,183 @@ Interface will then
 	send each chunkset
 Namenode would recieve a chunkset that would correspond to a session, which will correspond to a specific block
 Namenode would request a block creation from DataNodes using that chunkset
+
+----------------------------------
+
+Interface Features
+- Temporal Cache of Filesystem Layout
+	- Should be able to call a Namenode for it
+- Uploading of Files through Interface
+	- Sending file in chunks to Namenodes
+	- Interface would be a passthrough for Namenodes
+
+Namenode Features
+- Persistent Store of Filesystem Layout
+	- Syncing of Filesystem Layout across NameNodes
+	- Sending the Latest Layout to Interface
+- Receiving Files from Interface
+	- Job would be prepared beforehand by initial Namenode
+	- Initial Namenode would let the other Namenodes know of the job and what to expect
+	- Each namenode would coordinate their job sessions with Interface and Datanodes
+
+Datanode Feature
+- Recieving Files from Namenodes
+	- A Namenode would let the Datanode know about the job
+	- A Datanode shouldn't need to interact with anything else but the Namenode requesting of it
+
+Interface Object
+- Filesystem
+- Namenode Table
+- User/Pass Information
+- Website
+- Transfer Session Table
+
+Namenode Object
+- Filesystem
+- Namenode Info
+	- Node ID
+	- Hostname
+	- Address
+	- Primary Status
+	- Time Started
+	- Time Recreated
+	- Active Sessions
+	- Workload Score
+- Namenode Table
+- Datanode Table
+- Primary Namenode Status
+- User/Pass Table
+- File-Blocklist Table
+- Transfer Session Table
+
+Datanode Object
+- Datanode Info
+	- Node ID
+	- Hostname
+	- Address
+	- Time Started
+	- Times Recreated
+	- Active Sessions
+	- Workload Score
+	- Total Blocks
+	- Used Blocks
+- Block Table
+- Transfer Session Table
+
+----------------------------------
+
+Transfer Session Table
+- JSON Format
+- Fields
+	- Session ID
+
+----------------------------------
+
+Block Table
+- JSON Format
+- Fields
+	- Block ID
+	- Data
+
+----------------------------------
+
+Datanode Table
+- JSON Format
+- Key: Node ID
+	- ID of the node using fields as hashed content.
+- Fields
+	- Hostname
+		- Nickname of Datanode
+	- Address
+		- FQDN Address where datanode is located
+	- Time Started
+		- Time that Container was started
+	- Times Recreated
+		- Times that the container had to get recreated.
+	- Active Sessions
+		- Number of data transfer sessions taking place currently.
+	- Workload Score
+		- Arbitrary number indicating how much work the node still needs to do.
+		- Calculated by taking the amount of leftover chunks that have yet to be recieved/sent out in each session and adding them up
+		- The higher the number, the more work that still needs to be done.
+	- Total blocks
+		- Total amount of blocks available from Datanode
+	- Used blocks
+		- Total amount of blocks used by Datanode
+
+----------------------------------
+
+Namenode Table
+- JSON Format
+- Key: Node ID
+	- ID of the node using fields as hashed content.
+- Fields
+	- Hostname
+		- Nickname of Namenode
+	- Address
+		- FQDN Address where namenode is located
+	- Primary Status
+		- Is the node primary?
+	- Time Started
+		- Time that Container was started
+	- Times Recreated
+		- Times that the container had to get recreated.
+	- Active Sessions
+		- Number of data transfer sessions taking place currently.
+	- Workload Score
+		- Arbitrary number indicating how much work the node still needs to do.
+		- Calculated by taking the amount of leftover chunks that have yet to be recieved/sent out in each session and adding them up
+		- The higher the number, the more work that still needs to be done.
+
+----------------------------------
+
+Filesystem Properties
+- JSON Format
+- Directory/Subdirectory/Name Organization
+- Change Audit Log
+	- Fields
+		- Log ID
+			- Hashed Log Contents, last field created
+		- Log Date
+			- Date of Log Creation
+		- Name of file changed
+		- Type of Change
+			- One of "Creation, Deletion, Modification"
+		- Change Data
+			- JSON Formatted String with following fields
+				- Type: (Metadata or Data)
+				- Old Value (Value)
+				- New Value (Value)
+- File Properties
+	- Name (String)
+		- Name of the directory or leaf file.
+	- Full Name (String)
+		- Absolute filepath of the directory or leaf file.
+	- File Extention (String)
+		- File extention of the directory or leaf file.
+		- If directory, extention is "DIRECTORY."
+	- First Created (Date)
+		- First time directory or leaf file was created.
+	- Last Modified (Date)
+		- Last time directory or leaf file was created.
+		- For directories, it's when a child file is created, renamed, moved in or out, or deleted.
+			- Renaming a file is just creating a different file and deleting the old one.
+			- Moving in a file is creating a file in the directory.
+			- Moving out a file is deleting a file from the directory.
+		- For files, it's when a file is created, modified, or deleted. This includes file properties.
+	- Last Accessed (Date)
+		- Last time directory or leaf file was accessed.
+		- For directories, it's when the directory is opened. Opening a file does not affect this.
+		- For files, it's when the file is opened.
+	- Size (B/KB/MB/GB)
+		- Size of the file data stored in blocks. Does not include the file properties.
+		- For directories it will be zero.
+	- Encrypted (True/False)
+		- Boolean status of when the file data is encrypted.
+		- For directories, turning this one encrypts all of it's subfiles.
+			- However, a directory's subfiles all being encrypted does not mean the directory is encrypted.
+			- It's like an enforcement for directory children.
+	- Locked (True/False)
+		- Boolean status of when the file is locked from being modified.
+		- For directory locks, this prevents anything involving the directory metadata or child files from being changed.
+			- This involves moving files in and out of the locked directory and copying files.
