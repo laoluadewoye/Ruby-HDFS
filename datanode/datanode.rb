@@ -1,5 +1,6 @@
 require 'grpc'
 require 'toml-rb'
+require 'pathname'
 require_relative 'datanode_core_service'
 require_relative 'datanode_data_service'
 require_relative 'datanode_logic'
@@ -8,6 +9,7 @@ class HDFSDataNode
 	attr_reader :datanode_hostname 
   attr_reader :datanode_ordinal
   attr_reader :datanode_config
+  attr_reader :datanode_info
   attr_reader :datanode_server
 
   def initialize()
@@ -17,6 +19,25 @@ class HDFSDataNode
 
     # Load configuration
     @datanode_config = TomlRB.load_file("./sim_config.toml")
+
+    # Search for an already saved node state.
+    prior_node_state = load_prior_node_state(
+      @datanode_config["nodeconfig"]["node_state_filename"],
+      @datanode_config["nodeconfig"]["shared_fs_location"],
+      @datanode_config["nodeconfig"]["data_location"],
+      @datanode_hostname
+    )
+
+    if prior_node_state.nil?
+      @datanode_info = create_new_node_state(
+        @datanode_config["cluster"]["datanode_storage_size"],
+        @datanode_config["cluster"]["datanode_storage_size_unit"],
+        @datanode_config["block"]["block_size"],
+        @datanode_config["block"]["block_size_unit"]
+      )
+    else
+      @datanode_info = prior_node_state["datanode_info"]
+    end
 
     # Load gRPC services and server
     @core_service = DataNodeCoreService.new(self)

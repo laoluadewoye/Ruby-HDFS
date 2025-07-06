@@ -105,12 +105,12 @@ if $sim_config["security"]["enable_tls"]
   ca_key, ca_cert = create_key_cert("simulation-ca")
 
   # Create keys and certificates for the NameNodes
-  for i in 1..$sim_config["kube"]["name_node_count"] do
+  for i in 1..$sim_config["nodecount"]["name_node_count"] do
     create_key_cert("namenode-" + (i-1).to_s, "namelayer-service", ca_cert, ca_key)
   end
 
   # Create keys and certificates for the DataNodes
-  for i in 1..$sim_config["kube"]["data_node_count"] do
+  for i in 1..$sim_config["nodecount"]["data_node_count"] do
     create_key_cert("datanode-" + (i-1).to_s, "datalayer-service", ca_cert, ca_key)
   end
 

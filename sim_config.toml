@@ -11,8 +11,28 @@ setup_location = "./hdfs_setup"
 ##############################################################################
 ##############################################################################
 
+[nodeconfig]
+
+# Where the app will be located in the container image file.
+app_location = "/usr/src/app/"
+
+# Where the shared filesystem would be located in the container image file.
+shared_fs_location = "/usr/src/app/shared/"
+
+# Where the node data folder would be located in the container image file.
+data_location = "/usr/src/app/local/"
+
+# File name where the node's state will be stored and retrieved.
+node_state_filename = "node_state.toml"
+
+# Where the block storage folder would be located in the container image file.
+block_storage_location = "/usr/src/app/blockstore/"
+
+##############################################################################
+##############################################################################
+
 # Kubernetes StatefulSet settings
-[kube]
+[nodecount]
 
 # Number of NameNodes in the cluster.
 name_node_count = 2 
@@ -110,7 +130,7 @@ tls_cert_digest_hash = "SHA256"
 [block]
 
 # Size of each block in [block_size_unit].
-block_size = 16 
+block_size = 16
 
 # Unit for block size, can be "b", "kb", "mb", or "gb".
 block_size_unit = "kb" 
